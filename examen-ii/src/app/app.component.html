@@ -1,0 +1,48 @@
+<header>
+  <nav class="navbar">
+    <div class="navbar-izquierda">
+      <img src="assets/img/logo.png" routerLink="home" alt="Logo" class="logo">
+    </div>
+
+    <ul class="nav-derecha">
+      @if (usuarioLogueadoGeneral && !isAdmin)
+      {
+        <li class="username">{{ usuarioLogueadoGeneral }}</li>
+        <li (click)="logout()" routerLink="home">LOG OUT</li>
+      }
+      @else if (usuarioLogueadoGeneral && isAdmin)
+      {
+        <li class="username">{{ usuarioLogueadoGeneral }}</li>
+        <li (click)="logout()" routerLink="home">LOG OUT</li>
+        <li routerLink="usuarios"><a class="nav-link">USUARIOS</a></li>
+      }
+      @else
+      {
+        <li routerLink="login"><a class="nav-link">LOG IN</a></li>
+        <li class="nav-item dropdown" ngbDropdown>
+          <a class="nav-link dropdown-toggle" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false" ngbDropdownToggle>
+            REGISTRARSE
+          </a>
+          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="navbarScrollingDropdown">
+            <li ngbDropdownItem><a class="dropdown-item" routerLink="registro-pacientes">PACIENTES</a></li>
+            <li ngbDropdownItem><a class="dropdown-item" routerLink="registro-medicos">MÉDICOS</a></li>
+          </ul>
+        </li>
+      }
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>
+
+<footer>
+  <div>
+    <p>&copy; 2024 Hospital Polaco</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>

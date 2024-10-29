@@ -1,0 +1,79 @@
+/*ESTILOS PARA EL NAVBAR*/
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #000000;
+    background-image: url('../assets/img/black-paper.png');
+    padding: 10px 20px;
+    max-height: 20px;
+}
+
+.navbar-izquierda {
+    display: flex;
+    align-items: center;
+}
+
+.logo {
+    height: 70px;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+.logo:hover {
+    content: url('../assets/img/logo-hover.png');
+}
+
+.nav-derecha {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.nav-derecha li {
+    margin-left: 20px;
+    text-decoration: none;
+    color: white;
+    font-size: 1.05rem;
+    font-family: 'ubuntu';
+    transition: color 0.3s ease;
+    cursor: pointer;
+}
+
+/* Aplico estos estilos a todos los il menos al que tiene el nombre de usuario */
+.nav-derecha li:not(.username):hover {
+    color: red;
+}
+.nav-derecha li:not(.username) {
+    cursor: pointer;
+}
+
+.username {
+    color: white; 
+    cursor: default; 
+    pointer-events: none;
+}
+
+/* FOOTER */
+
+footer {
+    background-color: #000000;
+    background-image: url('../assets/img/black-paper.png');
+    text-align: center;
+    height: 70px;
+    padding: 20px;
+    width: 100%;
+
+}
+
+.copyright p {
+    font-size: 1.1rem;
+}
+
+/* ACTIVE ROUTE  */
+
+.active-route{
+    color: red;
+}

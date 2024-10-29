@@ -1,0 +1,143 @@
+.container-principal {
+    display: flex;
+    flex-direction: row;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    flex: 65%;
+    margin-left: 60px;
+    margin-top: 10px;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: row;
+}
+
+.inputs-izq,
+.inputs-der {
+    display: flex;
+    flex-direction: column;
+    flex: 50%;
+    margin-right: 20px;
+    /* Espacio entre columnas */
+}
+
+h3 {
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    color: white;
+    /* Color del título */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    /* Espaciado entre grupos */
+}
+
+label {
+    color: white;
+    font-family: 'ubuntu';
+    margin-bottom: 5px;
+}
+
+input{
+    background-color: #333;
+    border: 2px solid #f00;
+    color: #fff;
+    padding: 10px;
+    width: 80%;
+    max-width: 500px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    /* Bordes redondeados */
+    transition: border 0.3s ease;
+    /* Transición suave */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    /* Sombra */
+}
+
+input:focus {
+    border: 2px solid #fff;
+    /* Cambiar color al enfocar */
+    outline: none;
+    /* Quitar outline */
+}
+
+button[type="submit"] {
+    margin-top: 10px;
+    background-color: #f00;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1em;
+    border-radius: 5px;
+    /* Bordes redondeados */
+    margin-bottom: 20px;
+}
+
+button[type="submit"]:hover {
+    background-color: #c00;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* Sombra en hover */
+}
+
+button[type="submit"]:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+}
+
+.error {
+    color: #ff3333;
+    font-size: 1em;
+    /* Tamaño aumentado */
+    margin-top: 5px;
+}
+
+.imagen {
+    display: flex;
+    flex: 35%;
+    /* Ajusta aquí el tamaño deseado del contenedor */
+    align-items: center;
+    justify-content: left;
+    overflow: hidden;
+    /* Oculta cualquier contenido que se desborde */
+}
+
+.imagen img {
+    width: 100%;
+    /* La imagen se adapta al ancho del contenedor */
+    height: 100%;
+    /* Mantiene la proporción original */
+    object-fit: cover;
+    /* Asegura que la imagen cubra todo el área del contenedor */
+}
+
+select {
+    background-color: #333;
+    border: 2px solid #f00;
+    color: #fff;
+    padding: 10px;
+    width: 80%;
+    max-width: 500px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    transition: border 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+select:focus {
+    border: 2px solid #fff;
+    outline: none;
+}
+
+select option {
+    background-color: #333;
+    color: #fff;
+}

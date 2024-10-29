@@ -1,0 +1,22 @@
+<div class="tabla">
+    <div class="tabla-scroll">
+        <table>
+            <tr>
+                <!-- MODIFICAR -->
+                <th>Email</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Documento</th>
+                <th>Rol</th>
+            </tr>
+            <!-- MODIFICAR -->
+            <tr *ngFor="let objeto of objetos">
+                <td>{{ objeto.email }}</td>
+                <td>{{ objeto.nombre }}</td>
+                <td>{{ objeto.apellido }}</td>
+                <td>{{ objeto.documento }}</td>
+                <td>{{ objeto.rol }}</td>
+            </tr>
+        </table>
+    </div>
+</div>

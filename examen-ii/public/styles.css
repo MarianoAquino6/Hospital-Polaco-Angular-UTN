@@ -1,0 +1,55 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* You can add global styles to this file, and also import other style files */
+
+/* GENERALES */
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: rgb(228, 227, 227);
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+@font-face {
+    font-family: 'candara';
+    src: url('assets/fonts/Candara.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'ubuntu';
+    src: url('assets/fonts/Ubuntu-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'elegante';
+    src: url('assets/fonts/Elegante.ttf') format('truetype');
+}
+
+h2 {
+    color: rgb(0, 0, 0);
+    margin: 0;
+    font-family: 'elegante';
+}
+
+h3 {
+    color: rgb(0, 0, 0);
+    margin: 0;
+    font-family: 'ubuntu';
+}
+
+p {
+    color: rgb(0, 0, 0);
+    font-size: 1.1rem;
+    font-family: 'candara';
+    margin: 0;
+}
+
+.banner {
+    background-color: rgb(6, 44, 88);
+    background-image: url('assets/img/dark-denim-3.png');
+    width: 100%;
+    padding: 25px 0;
+    text-align: center;
+}

@@ -1,0 +1,46 @@
+<section>
+    <div class="banner">
+        <h2>GESTIONAR ACCESO DE MEDICOS</h2>
+    </div>
+</section>
+
+<section>
+    <app-loading [isLoading]="isLoading"></app-loading>
+
+    <h3>Usuarios Pendientes</h3>
+    <div class="gestion">
+        <div class="tabla-scroll">
+            <table *ngIf="objetos.length > 0; else noUsuarios">
+                <tr>
+                    <th>Seleccion</th>
+                    <th>Email</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Documento</th>
+                    <th>Especialidad</th>
+                </tr>
+                <tr *ngFor="let objeto of objetos" (click)="seleccionarObjeto(objeto.email)"
+                    [class.selected]="objetoSeleccionado === objeto.email">
+                    <td>
+                        <i class="fa" [ngClass]="objetoSeleccionado === objeto.email ? 'fa-check-circle' : 'fa-circle'"
+                            aria-hidden="true"></i>
+                    </td>
+                    <td>{{ objeto.email }}</td>
+                    <td>{{ objeto.nombre }}</td>
+                    <td>{{ objeto.apellido }}</td>
+                    <td>{{ objeto.documento }}</td>
+                    <td>{{ objeto.especialidad }}</td>
+                </tr>
+            </table>
+            <ng-template #noUsuarios>
+                <p>No existen usuarios por aceptar.</p>
+            </ng-template>
+        </div>
+
+        <div class="accionable">
+            <button (click)="aceptarUsuario()" [disabled]="!objetoSeleccionado">
+                ACEPTAR USUARIO
+            </button>
+        </div>
+    </div>
+</section>
