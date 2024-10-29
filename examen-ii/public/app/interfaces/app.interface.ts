@@ -5,7 +5,7 @@ export interface Medico {
     nombre: string;
     apellido: string;
     documento: number;
-    especialidades: string[];
+    especialidad: string;
 }
 
 export interface UsuarioStandard {

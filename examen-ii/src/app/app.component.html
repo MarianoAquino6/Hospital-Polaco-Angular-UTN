@@ -9,12 +9,14 @@
       {
         <li class="username">{{ usuarioLogueadoGeneral }}</li>
         <li (click)="logout()" routerLink="home">LOG OUT</li>
+        <li routerLink="perfil"><a class="nav-link">MI PERFIL</a></li>
       }
       @else if (usuarioLogueadoGeneral && isAdmin)
       {
         <li class="username">{{ usuarioLogueadoGeneral }}</li>
         <li (click)="logout()" routerLink="home">LOG OUT</li>
         <li routerLink="usuarios"><a class="nav-link">USUARIOS</a></li>
+        <li routerLink="perfil"><a class="nav-link">MI PERFIL</a></li>
       }
       @else
       {

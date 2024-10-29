@@ -1,0 +1,50 @@
+.tabla-usuarios{
+    padding-top: 30px;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+/* Estilo para la sección de selección */
+section h3 {
+    margin-top: 50px; /* Añadir margen superior e inferior para separar del borde */
+    text-align: center; /* Centrar el título */
+    color: white; /* Asegurarse de que el color del texto sea legible */
+}
+
+/* Modificaciones en la grid */
+.grid-inicio {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 20px; /* Espacio superior para separar del título */
+}
+
+.card {
+    background: linear-gradient(to bottom, rgba(69, 8, 8, 0.8), rgba(69, 8, 8, 0.6));
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Añadir transición para la sombra */
+    cursor: pointer;
+    margin: 15px; /* Mayor espacio entre tarjetas */
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Añadir sombra */
+}
+
+.card img {
+    border-radius: 10px 10px 0 0;
+    width: 100%;
+    height: auto;
+}
+
+.cuerpo-card {
+    color: white;
+    font-family: 'ubuntu';
+    text-decoration: none;
+    padding: 15px; /* Mayor padding para un mejor espacio interno */
+    text-align: center; /* Centrar el texto */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8); /* Sombra más intensa al pasar el mouse */
+}

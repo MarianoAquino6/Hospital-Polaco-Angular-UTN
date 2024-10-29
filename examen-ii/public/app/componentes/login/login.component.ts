@@ -36,7 +36,7 @@ export class LoginComponent {
   }
 
   autocompletarMedico() {
-    this.usernameLogin = "medicohosplaboivv@outlook.com";
+    this.usernameLogin = "medicohosplaboiv@outlook.com";
     this.passLogin = "123456Medico";
   }
 

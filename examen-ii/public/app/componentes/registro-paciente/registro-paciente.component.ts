@@ -1,28 +1,25 @@
-import { createUserWithEmailAndPassword } from '@firebase/auth';
 import { Component } from '@angular/core';
 import { addDoc, collection, Firestore, getDocs, query, where } from '@angular/fire/firestore';
-import { FormControl, FormGroup, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ReactiveFormsModule, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { AlertService } from '../../servicios/alert.service';
-import { getDownloadURL, getStorage, ref, uploadBytes } from '@angular/fire/storage';
 import { CommonModule } from '@angular/common';
+import { getDownloadURL, getStorage, ref, uploadBytes } from '@angular/fire/storage';
 import { Rol } from '../../enums/enums';
-import { getAuth, sendEmailVerification } from '@angular/fire/auth';
+import { getAuth } from '@angular/fire/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from '@firebase/auth';
 import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
-  selector: 'app-registro-medico',
+  selector: 'app-registro-paciente',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingComponent],
-  templateUrl: './registro-medico.component.html',
-  styleUrl: './registro-medico.component.css'
+  imports: [ReactiveFormsModule, CommonModule, LoadingComponent],
+  templateUrl: './registro-paciente.component.html',
+  styleUrl: './registro-paciente.component.css'
 })
-export class RegistroMedicoComponent {
+export class RegistroPacienteComponent {
   formulario!: FormGroup;
   isLoading = false;
-  especialidades: string[] = ['Cardiología', 'Dermatología', 'Pediatría', 'Neurología'];
-  especialidadesSeleccionadas: string[] = [];
-  especialidadActual: string = ''; // Nueva propiedad para la selección actual
 
   constructor(private firestore: Firestore, private router: Router, private alert: AlertService) { }
 
@@ -31,19 +28,18 @@ export class RegistroMedicoComponent {
       {
         nombre: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z ]*$')]),
         apellido: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z ]*$')]),
-        edad: new FormControl('', [Validators.required, Validators.min(18), Validators.max(80)]),
+        edad: new FormControl('', [Validators.required, Validators.min(5), Validators.max(120)]),
         documento: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(7), Validators.maxLength(8)]),
-        especialidad: new FormControl('', Validators.required),
-        otraEspecialidad: new FormControl(''),
+        obraSocial: new FormControl('', Validators.required),
         email: new FormControl('', [Validators.required, Validators.email]),
         password: new FormControl('', [
           Validators.required,
           Validators.minLength(6)
         ]),
-        imagen1: new FormControl('', Validators.required)
+        imagen1: new FormControl('', Validators.required),
+        imagen2: new FormControl('', Validators.required)
       }
     );
-    this.formulario.get('especialidad')?.setValue([]);
   }
 
   async onSubmit(): Promise<void> {
@@ -62,57 +58,20 @@ export class RegistroMedicoComponent {
     }
   }
 
-  onEspecialidadChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const selectedValue = selectElement.value;
-    this.especialidadActual = selectedValue; // Guardamos la especialidad seleccionada
-  
-    // Actualiza el FormControl de especialidad con el valor seleccionado
-    this.formulario.get('especialidad')?.setValue(selectedValue);
-  
-    if (selectedValue !== 'otra' && !this.especialidadesSeleccionadas.includes(selectedValue)) {
-      this.especialidadesSeleccionadas.push(selectedValue);
-    }
-  
-    this.formulario.get('otraEspecialidad')?.updateValueAndValidity();
-  }
-
-  agregarOtraEspecialidad() {
-    const otra = this.formulario.get('otraEspecialidad')?.value;
-    if (otra && !this.especialidadesSeleccionadas.includes(otra)) {
-      this.especialidadesSeleccionadas.push(otra);
-    }
-  }
-
-  eliminarEspecialidad(index: number) {
-    this.especialidadesSeleccionadas.splice(index, 1);
-  }
-
-  onImageSelected(event: Event, imageField: string) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-
-      // Verificar que sea una imagen
-      if (file.type.startsWith('image/')) {
-        this.formulario.get(imageField)?.setValue(file);
-      } else {
-        this.alert.mostrarError('El archivo debe ser una imagen.');
-        input.value = ''; // Resetea el input
-      }
-    }
-  }
-
   async uploadImages(): Promise<string[]> {
     const storage = getStorage();
     const imageUrls: string[] = [];
 
-    const file = this.formulario.get('imagen1')?.value;
-    if (file) {
-      const storageRef = ref(storage, 'imagenes/medicos/${file.name}');
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      imageUrls.push(url);
+    for (let i = 1; i <= 2; i++) {
+      const imageControl = this.formulario.get(`imagen${i}`);
+      const file = imageControl?.value;
+
+      if (file) {
+        const storageRef = ref(storage, `imagenes/pacientes/${file.name}`);
+        await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(storageRef);
+        imageUrls.push(url);
+      }
     }
 
     return imageUrls;
@@ -134,16 +93,16 @@ export class RegistroMedicoComponent {
         apellido: this.formulario.get('apellido')?.value,
         edad: this.formulario.get('edad')?.value,
         documento: this.formulario.get('documento')?.value,
-        especialidades: this.especialidadesFiltradas,
-        email: email,
+        obraSocial: this.formulario.get('obraSocial')?.value,
+        email: this.formulario.get('email')?.value,
+        password: this.formulario.get('password')?.value,
         imagen1: urls[0],
-        rol: Rol.Medico,
-        aceptado: false,
+        imagen2: urls[1],
+        rol: Rol.Paciente,
         fechaCreacion: new Date()
       };
 
       await addDoc(col, obj);
-
       const auth = getAuth();
       const userCredential = await createUserWithEmailAndPassword(auth, email, this.formulario.get('password')?.value);
       await sendEmailVerification(userCredential.user);
@@ -165,6 +124,21 @@ export class RegistroMedicoComponent {
     return !querySnapshot.empty;
   }
 
+  onImageSelected(event: Event, imageField: string) {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+
+      // Verificar que sea una imagen
+      if (file.type.startsWith('image/')) {
+        this.formulario.get(imageField)?.setValue(file); // Almacena el archivo en el FormControl
+      } else {
+        this.alert.mostrarError('El archivo debe ser una imagen.');
+        input.value = ''; // Resetea el input
+      }
+    }
+  }
+
   // Modificar getters y setters
   get nombre() {
     return this.formulario.get('nombre');
@@ -182,16 +156,8 @@ export class RegistroMedicoComponent {
     return this.formulario.get('documento');
   }
 
-  get especialidadesFiltradas(): string[] {
-    return this.especialidadesSeleccionadas.filter(especialidad => especialidad !== 'otra');
-  }
-
-  get especialidad() {
-    return this.formulario.get('especialidad');
-  }
-
-  get otraEspecialidad() {
-    return this.formulario.get('otraEspecialidad');
+  get obraSocial() {
+    return this.formulario.get('obraSocial');
   }
 
   get email() {
@@ -204,5 +170,9 @@ export class RegistroMedicoComponent {
 
   get imagen1() {
     return this.formulario.get('imagen1');
+  }
+
+  get imagen2() {
+    return this.formulario.get('imagen2');
   }
 }

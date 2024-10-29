@@ -1,0 +1,50 @@
+<section>
+    <div class="banner">
+        <h2>GESTION DE USUARIOS</h2>
+    </div>
+</section>
+
+<section>
+    <h3>Usuarios del Sistema</h3>
+    <div class="tabla-usuarios">
+        <app-tabla-usuarios></app-tabla-usuarios>
+    </div>
+</section>
+
+<section>
+    <h3>Selecciona la tarea a realizar</h3>
+    <div class="grid-inicio row gy-3 mt-3 mb-3">
+        <div class="col-md-3">
+            <div class="card" routerLink="/usuarios/gestion-acceso">
+                <img src="assets/img/gestion-acceso.png" class="card-img-top" alt="Login">
+                <div class="card-body cuerpo-card">
+                    <h5 class="card-title">GESTIONAR ACCESOS</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card" routerLink="/registro-pacientes">
+                <img src="assets/img/pacientes.png" class="card-img-top" alt="Registrar Paciente">
+                <div class="card-body cuerpo-card">
+                    <h5 class="card-title">REGISTRAR PACIENTE</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card" routerLink="/registro-medicos">
+                <img src="assets/img/medicos.png" class="card-img-top" alt="Registrar Médico">
+                <div class="card-body cuerpo-card">
+                    <h5 class="card-title">REGISTRAR MEDICO</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card" routerLink="/usuarios/registro-admin">
+                <img src="assets/img/admin.png" class="card-img-top" alt="Registrar Administrador">
+                <div class="card-body cuerpo-card">
+                    <h5 class="card-title">REGISTRAR ADMINISTRADOR</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

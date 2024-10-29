@@ -5,8 +5,31 @@
     </div>
 
     <ul class="nav-derecha">
-      <li routerLink="quien-soy">ACERCA DE</li>
-      <li routerLink="login">INGRESAR</li>
+      @if (usuarioLogueadoGeneral && !isAdmin)
+      {
+        <li class="username">{{ usuarioLogueadoGeneral }}</li>
+        <li (click)="logout()" routerLink="home">LOG OUT</li>
+      }
+      @else if (usuarioLogueadoGeneral && isAdmin)
+      {
+        <li class="username">{{ usuarioLogueadoGeneral }}</li>
+        <li (click)="logout()" routerLink="home">LOG OUT</li>
+        <li routerLink="usuarios"><a class="nav-link">USUARIOS</a></li>
+      }
+      @else
+      {
+        <li routerLink="login"><a class="nav-link">LOG IN</a></li>
+        <li class="nav-item dropdown" ngbDropdown>
+          <a class="nav-link dropdown-toggle" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false" ngbDropdownToggle>
+            REGISTRARSE
+          </a>
+          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="navbarScrollingDropdown">
+            <li ngbDropdownItem><a class="dropdown-item" routerLink="registro-pacientes">PACIENTES</a></li>
+            <li ngbDropdownItem><a class="dropdown-item" routerLink="registro-medicos">MÉDICOS</a></li>
+          </ul>
+        </li>
+      }
     </ul>
   </nav>
 </header>

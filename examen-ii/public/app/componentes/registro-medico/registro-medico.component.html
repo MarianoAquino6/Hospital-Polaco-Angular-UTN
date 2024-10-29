@@ -53,41 +53,29 @@
                         </div>
                     </div>
 
-                    <!-- Desplegable de Especialidades -->
+                    <!-- Especialidad -->
                     <div class="form-group">
                         <label for="inputState">Especialidad</label>
-                        <select id="inputState" (change)="onEspecialidadChange($event)">
+                        <select id="inputState" formControlName="especialidad" (change)="onEspecialidadChange($event)">
                             <option value="" disabled selected>Elige...</option>
-                            <option *ngFor="let especialidad of especialidades" [value]="especialidad">
-                                {{ especialidad }}
-                            </option>
+                            <option *ngFor="let especialidad of especialidades" [value]="especialidad">{{ especialidad
+                                }}</option>
                             <option value="otra">Otra</option>
                         </select>
+                        <div *ngIf="especialidad?.invalid && (especialidad?.touched || especialidad?.dirty)">
+                            <small class="error">Debes seleccionar una especialidad.</small>
+                        </div>
                     </div>
 
                     <!-- Input para ingresar la otra especialidad -->
-                    <div class="form-group" *ngIf="especialidadActual === 'otra'">
+                    <div class="form-group" *ngIf="especialidadSeleccionada.includes('otra')">
                         <label for="otraEspecialidad">Especifica tu especialidad</label>
-                        <input type="text" id="otraEspecialidad" formControlName="otraEspecialidad"
-                            (blur)="agregarOtraEspecialidad()" />
+                        <input type="text" id="otraEspecialidad" formControlName="otraEspecialidad" />
                         <div
                             *ngIf="otraEspecialidad?.invalid && (otraEspecialidad?.touched || otraEspecialidad?.dirty)">
                             <small class="error">Este campo es obligatorio si seleccionaste "Otra".</small>
                         </div>
                     </div>
-
-                    <!-- Lista de Especialidades Seleccionadas -->
-                    <div *ngIf="especialidadesFiltradas.length > 0">
-                        <h3 style="margin-bottom: 10px;">Especialidades Seleccionadas:</h3>
-                        <ul>
-                          <li *ngFor="let especialidad of especialidadesFiltradas; let i = index">
-                            {{ especialidad }}
-                            <button type="button" (click)="eliminarEspecialidad(i)" style="margin-left: 10px; color: red; cursor: pointer; border: none; background: none;">
-                              ✖
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
                 </div>
 
                 <div class="inputs-der">

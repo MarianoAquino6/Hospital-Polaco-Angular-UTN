@@ -25,7 +25,7 @@
     /* Espacio entre columnas */
 }
 
-.formulario h3 {
+h3 {
     display: flex;
     margin-top: 20px;
     margin-bottom: 40px;
@@ -117,31 +117,4 @@ button[type="submit"]:disabled {
     /* Mantiene la proporción original */
     object-fit: cover;
     /* Asegura que la imagen cubra todo el área del contenedor */
-}
-
-select {
-    background-color: #333;
-    border: 2px solid #f00;
-    color: #fff;
-    padding: 10px;
-    width: 80%;
-    max-width: 500px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    transition: border 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
-
-select:focus {
-    border: 2px solid #fff;
-    outline: none;
-}
-
-select option {
-    background-color: #333;
-    color: #fff;
-}
-
-li {
-    color: white
 }

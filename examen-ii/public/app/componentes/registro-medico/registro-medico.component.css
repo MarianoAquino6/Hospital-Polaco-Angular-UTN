@@ -25,7 +25,7 @@
     /* Espacio entre columnas */
 }
 
-.formulario h3 {
+h3 {
     display: flex;
     margin-top: 20px;
     margin-bottom: 40px;
@@ -140,8 +140,4 @@ select:focus {
 select option {
     background-color: #333;
     color: #fff;
-}
-
-li {
-    color: white
 }

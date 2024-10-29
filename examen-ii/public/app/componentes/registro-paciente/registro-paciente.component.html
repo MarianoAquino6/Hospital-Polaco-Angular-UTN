@@ -1,6 +1,6 @@
 <section>
     <div class="banner">
-        <h2>REGISTRO DE MEDICOS</h2>
+        <h2>REGISTRO DE PACIENTES</h2>
     </div>
 </section>
 
@@ -41,7 +41,7 @@
                     <div class="form-group">
                         <label for="edad">Edad:</label>
                         <input type="number" id="edad" formControlName="edad"
-                            placeholder="Ingresa tu edad (De 18 a 80)" />
+                            placeholder="Ingresa tu edad (De 5 a 120)" />
                         <div *ngIf="edad?.hasError('required') && edad?.touched">
                             <small class="error">Este campo es obligatorio.</small>
                         </div>
@@ -53,44 +53,6 @@
                         </div>
                     </div>
 
-                    <!-- Desplegable de Especialidades -->
-                    <div class="form-group">
-                        <label for="inputState">Especialidad</label>
-                        <select id="inputState" (change)="onEspecialidadChange($event)">
-                            <option value="" disabled selected>Elige...</option>
-                            <option *ngFor="let especialidad of especialidades" [value]="especialidad">
-                                {{ especialidad }}
-                            </option>
-                            <option value="otra">Otra</option>
-                        </select>
-                    </div>
-
-                    <!-- Input para ingresar la otra especialidad -->
-                    <div class="form-group" *ngIf="especialidadActual === 'otra'">
-                        <label for="otraEspecialidad">Especifica tu especialidad</label>
-                        <input type="text" id="otraEspecialidad" formControlName="otraEspecialidad"
-                            (blur)="agregarOtraEspecialidad()" />
-                        <div
-                            *ngIf="otraEspecialidad?.invalid && (otraEspecialidad?.touched || otraEspecialidad?.dirty)">
-                            <small class="error">Este campo es obligatorio si seleccionaste "Otra".</small>
-                        </div>
-                    </div>
-
-                    <!-- Lista de Especialidades Seleccionadas -->
-                    <div *ngIf="especialidadesFiltradas.length > 0">
-                        <h3 style="margin-bottom: 10px;">Especialidades Seleccionadas:</h3>
-                        <ul>
-                          <li *ngFor="let especialidad of especialidadesFiltradas; let i = index">
-                            {{ especialidad }}
-                            <button type="button" (click)="eliminarEspecialidad(i)" style="margin-left: 10px; color: red; cursor: pointer; border: none; background: none;">
-                              ✖
-                            </button>
-                          </li>
-                        </ul>
-                      </div>
-                </div>
-
-                <div class="inputs-der">
                     <!-- Documento -->
                     <div class="form-group">
                         <label for="documento">Número de Documento:</label>
@@ -103,16 +65,27 @@
                             <small class="error">Este campo debe contener solo números.</small>
                         </div>
                         <div *ngIf="documento?.hasError('maxlength') && documento?.touched">
-                            <small class="error">Solo se permite hasta {{
-                                documento?.getError('maxlength').requiredLength }}
+                            <small class="error">Solo se permite hasta {{ documento?.getError('maxlength').requiredLength }}
                                 caracteres.</small>
                         </div>
                         <div *ngIf="documento?.hasError('minlength') && documento?.touched">
-                            <small class="error">Solo se permite desde {{
-                                documento?.getError('minlength').requiredLength }}
+                            <small class="error">Solo se permite desde {{ documento?.getError('minlength').requiredLength }}
                                 caracteres.</small>
                         </div>
                     </div>
+
+                    <!-- Obra Social -->
+                    <div class="form-group">
+                        <label for="obraSocial">Obra Social:</label>
+                        <input type="text" id="obraSocial" formControlName="obraSocial"
+                            placeholder="Ingresa tu obra social" />
+                        <div *ngIf="obraSocial?.hasError('required') && obraSocial?.touched">
+                            <small class="error">Este campo es obligatorio.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inputs-der">
 
                     <!-- Email -->
                     <div class="form-group">
@@ -140,15 +113,25 @@
                         </div>
                     </div>
 
-                    <!-- Imágen -->
+                    <!-- Imágenes -->
                     <div class="form-group">
-                        <label for="imagen1">Imagen de Perfil:</label>
+                        <label for="imagen1">Imagen de Perfil 1:</label>
                         <input type="file" id="imagen1" formControlName="imagen1"
                             (change)="onImageSelected($event, 'imagen1')" accept="image/*" />
                         <div *ngIf="imagen1?.hasError('required') && imagen1?.touched">
                             <small class="error">Este campo es obligatorio.</small>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                        <label for="imagen2">Imagen de Perfil 2:</label>
+                        <input type="file" id="imagen2" formControlName="imagen2"
+                            (change)="onImageSelected($event, 'imagen2')" accept="image/*" />
+                        <div *ngIf="imagen2?.hasError('required') && imagen2?.touched">
+                            <small class="error">Este campo es obligatorio.</small>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -160,6 +143,6 @@
     </div>
 
     <div class="imagen">
-        <img src="assets/img/registro-medicos.webp" alt="">
+        <img src="assets/img/registro-pacientes.webp" alt="">
     </div>
 </section>

@@ -7,7 +7,6 @@
     background-color: #000000;
     background-image: url('../assets/img/black-paper.png');
     padding: 10px 20px;
-    max-height: 20px;
 }
 
 .navbar-izquierda {
@@ -65,7 +64,10 @@ footer {
     height: 70px;
     padding: 20px;
     width: 100%;
+}
 
+footer p {
+    color: white;
 }
 
 .copyright p {
@@ -76,4 +78,36 @@ footer {
 
 .active-route{
     color: red;
+}
+
+/* Estilo del Dropdown */
+.dropdown-menu {
+    background-color: #000000; /* Fondo negro */
+    border: 1px solid #444; /* Borde más suave */
+    border-radius: 0.5rem; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra */
+}
+
+/* Estilo de los ítems del Dropdown */
+.dropdown-item {
+    color: white; /* Color del texto */
+    font-family: 'ubuntu';
+}
+
+/* Efecto al pasar el mouse sobre los ítems */
+.dropdown-item:hover {
+    background-color: red; /* Fondo rojo al pasar el mouse */
+    color: white; /* Texto blanco */
+}
+
+/* Estilo del botón del dropdown */
+.btn-secondary.dropdown-toggle {
+    background-color: #000000; /* Fondo negro */
+    border: none; /* Sin borde */
+    color: white; /* Color del texto */
+}
+
+/* Efecto al pasar el mouse sobre el botón del dropdown */
+.btn-secondary.dropdown-toggle:hover {
+    background-color: red; /* Cambiar a rojo al pasar el mouse */
 }
