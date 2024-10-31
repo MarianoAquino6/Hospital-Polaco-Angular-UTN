@@ -95,7 +95,6 @@ export class RegistroPacienteComponent {
         documento: this.formulario.get('documento')?.value,
         obraSocial: this.formulario.get('obraSocial')?.value,
         email: this.formulario.get('email')?.value,
-        password: this.formulario.get('password')?.value,
         imagen1: urls[0],
         imagen2: urls[1],
         rol: Rol.Paciente,

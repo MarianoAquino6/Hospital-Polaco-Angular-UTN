@@ -1,0 +1,143 @@
+.solicitud-turnos {
+    display: flex;
+    flex-direction: row;
+}
+
+.filtros-laterales {
+    display: flex;
+    flex-direction: column;
+    flex: 30%;
+    background-color: #212121;
+}
+
+.filtros-laterales h3 {
+    margin-left: 30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+form {
+    margin-left: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    color: #ddd;
+    font-family: 'ubuntu';
+    margin-bottom: 5px;
+}
+
+select {
+    background-color: #333;
+    border: 2px solid #f00;
+    color: #fff;
+    padding: 10px;
+    width: 80%;
+    max-width: 500px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    transition: border 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+select:focus {
+    border: 2px solid #fff;
+    outline: none;
+}
+
+select option {
+    background-color: #333;
+    color: #fff;
+}
+
+.error {
+    color: #ff3333;
+    font-size: 1em;
+    /* Tamaño aumentado */
+    margin-top: 5px;
+}
+
+button[type="submit"] {
+    margin-top: 10px;
+    background-color: #f00;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1em;
+    border-radius: 5px;
+    /* Bordes redondeados */
+    margin-bottom: 20px;
+    max-width: 150px;
+}
+
+button[type="submit"]:hover {
+    background-color: #c00;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* Sombra en hover */
+}
+
+button[type="submit"]:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+}
+
+.turnos {
+    display: flex;
+    flex-direction: row;
+    flex: 70%;
+    margin-bottom: 30px;
+}
+
+.calendario {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    margin-left: 50px;
+}
+
+.calendario h3 {
+    margin-top: 30px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.calendario p{
+    margin-bottom: 30px;
+}
+
+.forbidden {
+    filter: brightness(0.5);
+    /* Reduce el brillo al 50% */
+    pointer-events: none;
+    /* Deshabilita la interacción */
+    opacity: 0.7;
+    /* Da un efecto de oscurecimiento adicional */
+}
+
+.forbidden app-calendario {
+    pointer-events: none;
+    /* Deshabilita la interacción dentro del calendario */
+    user-select: none;
+    /* Evita la selección de texto u otros elementos */
+}
+
+.horarios {
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    margin-left: 70px;
+}
+
+.horarios h3 {
+    margin-top: 30px;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.horarios p{
+    margin-bottom: 30px;
+}

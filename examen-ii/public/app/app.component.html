@@ -5,19 +5,34 @@
     </div>
 
     <ul class="nav-derecha">
-      @if (usuarioLogueadoGeneral && !isAdmin)
+      <!-- Si es medico -->
+      @if (usuarioLogueadoGeneral && isMedico)
       {
         <li class="username">{{ usuarioLogueadoGeneral }}</li>
         <li (click)="logout()" routerLink="home">LOG OUT</li>
+        <li routerLink="perfil"><a class="nav-link">MI PERFIL</a></li>
       }
+      <!-- Si es paciente -->
+      @else if (usuarioLogueadoGeneral && isPaciente)
+      {
+        <li class="username">{{ usuarioLogueadoGeneral }}</li>
+        <li (click)="logout()" routerLink="home">LOG OUT</li>
+        <li routerLink="solicitar-turnos"><a class="nav-link">SOLICITAR TURNOS</a></li>
+        <li routerLink="perfil"><a class="nav-link">MI PERFIL</a></li>
+      }
+      <!-- Si es admin -->
       @else if (usuarioLogueadoGeneral && isAdmin)
       {
         <li class="username">{{ usuarioLogueadoGeneral }}</li>
         <li (click)="logout()" routerLink="home">LOG OUT</li>
         <li routerLink="usuarios"><a class="nav-link">USUARIOS</a></li>
+        <li routerLink="solicitar-turnos"><a class="nav-link">SOLICITAR TURNOS</a></li>
+        <li routerLink="perfil"><a class="nav-link">MI PERFIL</a></li>
       }
+      <!-- Si no esta logueado -->
       @else
       {
+        <li routerLink="solicitar-turnos"><a class="nav-link">SOLICITAR TURNOS (SACAR)</a></li>
         <li routerLink="login"><a class="nav-link">LOG IN</a></li>
         <li class="nav-item dropdown" ngbDropdown>
           <a class="nav-link dropdown-toggle" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown"

@@ -99,7 +99,6 @@ export class RegistroAdminComponent {
         edad: this.formulario.get('edad')?.value,
         documento: this.formulario.get('documento')?.value,
         email: this.formulario.get('email')?.value,
-        password: this.formulario.get('password')?.value,
         imagen1: urls[0],
         rol: Rol.Admin,
         fechaCreacion: new Date()

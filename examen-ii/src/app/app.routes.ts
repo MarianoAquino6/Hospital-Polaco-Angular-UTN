@@ -17,7 +17,14 @@ export const routes: Routes = [
         loadChildren: () => import('./modulos/usuarios/usuarios.module').then(c => c.UsuariosModule),
         canActivate: [adminGuard]
     },
-
+    {
+        path: 'perfil',
+        loadChildren: () => import('./modulos/perfil/perfil.module').then(c => c.PerfilModule)
+    },
+    {
+        path: 'solicitar-turnos',
+        loadChildren: () => import('./modulos/solicitar-turno/solicitar-turno.module').then(c => c.SolicitarTurnoModule)
+    },
 
     { path: '**', component: PageNotFoundComponent }
 ];

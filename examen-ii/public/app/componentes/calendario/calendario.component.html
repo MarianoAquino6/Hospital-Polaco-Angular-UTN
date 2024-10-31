@@ -1,0 +1,30 @@
+<div class="calendar">
+    <header>
+        <button (click)="changeMonth(-1)">Anterior</button>
+        <h3>{{ currentYear }} - {{ monthNames[currentMonth] }}</h3>
+        <button (click)="changeMonth(1)">Siguiente</button>
+    </header>
+
+    <div class="weekdays">
+        <div class="weekday">Lun</div>
+        <div class="weekday">Mar</div>
+        <div class="weekday">Mié</div>
+        <div class="weekday">Jue</div>
+        <div class="weekday">Vie</div>
+        <div class="weekday">Sáb</div>
+        <div class="weekday">Dom</div>
+    </div>
+
+    <div class="days">
+        <div class="day" *ngFor="let day of daysInMonth" [ngClass]="{
+               'selected': selectedDate === (day + '-' + (currentMonth + 1) + '-' + currentYear),
+               'disabled-day': isDisabled(day)
+             }" (click)="!isDisabled(day) && day ? selectDate(day) : null">
+            {{ day }}
+        </div>
+    </div>
+
+    <div *ngIf="selectedDate" class="selected-date">
+        Día seleccionado: {{ selectedDate }}
+    </div>
+</div>

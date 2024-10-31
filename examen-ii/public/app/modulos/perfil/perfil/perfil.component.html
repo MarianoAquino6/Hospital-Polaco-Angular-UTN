@@ -1,0 +1,35 @@
+<app-loading [isLoading]="isLoading"></app-loading>
+
+<section>
+    <div class="banner">
+        <h2>MI PERFIL</h2>
+    </div>
+</section>
+
+<div class="perfil-container">
+    <div class="perfil-column perfil-info">
+        <div class="perfil-header">
+            <img [src]="getImagenPerfil()" alt="Imagen de Perfil" class="perfil-imagen" />
+            <h2>{{ usuarioLogueadoEntidad?.nombre }} {{ usuarioLogueadoEntidad?.apellido }}</h2>
+            <span class="perfil-rol">{{ usuarioLogueadoEntidad?.rol }}</span>
+        </div>
+
+        <p><strong>Email:</strong> {{ usuarioLogueadoEntidad?.email }}</p>
+        <p><strong>Documento:</strong> {{ usuarioLogueadoEntidad?.documento }}</p>
+        <p><strong>Edad:</strong> {{ usuarioLogueadoEntidad?.edad }} años</p>
+
+        <ng-container *ngIf="isPaciente(usuarioLogueadoEntidad)">
+            <p><strong>Obra Social:</strong> {{ usuarioLogueadoEntidad.obraSocial }}</p>
+            <p><strong>Imagen Secundaria:</strong></p>
+            <img [src]="usuarioLogueadoEntidad.imagen2" alt="Imagen 2" class="perfil-imagen-secundaria" />
+        </ng-container>
+
+        <ng-container *ngIf="isAdmin(usuarioLogueadoEntidad)">
+            <p><strong>Rol Administrativo:</strong> Admin</p>
+        </ng-container>
+    </div>
+
+    <div class="perfil-column disponibilidad-container" *ngIf="isMedico(usuarioLogueadoEntidad)">
+        <app-disponibilidad [usuarioLogueadoEntidad]="usuarioLogueadoEntidad"></app-disponibilidad>
+    </div>
+</div>

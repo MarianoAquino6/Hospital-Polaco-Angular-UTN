@@ -1,0 +1,9 @@
+<div *ngIf="turnos.length > 0">
+    <label class="info">Horarios Disponibles</label>
+    <div *ngFor="let turno of turnos" class="turnos-rb">
+        <label>
+            <input type="radio" name="turno" [value]="turno">
+            {{ turno }}
+        </label>
+    </div>
+</div>

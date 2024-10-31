@@ -1,0 +1,69 @@
+<app-loading [isLoading]="isLoading"></app-loading>
+
+<h3>Disponibilidad Horaria</h3>
+
+<!-- Calendario para seleccionar un día -->
+<app-calendario (dateSelected)="handleDateSelected($event)"></app-calendario>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+
+    @if (fechaSeleccionada)
+    {
+        <div class="seleccion-especialidad" style="margin-top: 20px;">
+            <label for="especialidad">Especialidad</label>
+            <select formControlName="especialidad">
+                <option value="" disabled selected>Elige...</option>
+                <option *ngFor="let especialidad of usuarioLogueadoEntidad.especialidades" [value]="especialidad">
+                    {{ especialidad }}
+                </option>
+            </select>
+    
+            <div *ngIf="especialidad?.hasError('required') && especialidad?.touched">
+                <small class="error">Este campo es obligatorio.</small>
+            </div>
+        </div>
+
+        <!-- Mostrar horarios solo para la especialidad seleccionada -->
+        <div *ngIf="form.get('especialidad')?.value">
+            <h4>{{ form.get('especialidad')?.value }}</h4>
+            <div class="disponibilidad">
+                <div class="horarios">
+                    <label>Hora de Inicio:</label>
+                    <input type="time" formControlName="horaInicio">
+                    <div *ngIf="horaInicio?.hasError('fueraDeRango')">
+                        <small class="error">Horario de inicio fuera del rango permitido por horario laboral</small>
+                    </div>
+
+                    <label>Hora de Fin:</label>
+                    <input type="time" formControlName="horaFin">
+                    <div *ngIf="horaFin?.hasError('fueraDeRango')">
+                        <small class="error">Horario de fin fuera del rango permitido por horario laboral</small>
+                    </div>
+                    <div *ngIf="horaFin?.hasError('finMenorQueInicio')">
+                        <small class="error">La hora de fin debe ser mayor que la hora de inicio.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="duracion-turnos">
+            <label>Duración de los turnos:</label>
+            <input type="number" formControlName="duracionTurnos" min="30" max="60" step="1">
+            <div *ngIf="duracionTurnos?.hasError('required') && duracionTurnos?.touched">
+                <small class="error">Este campo es obligatorio.</small>
+            </div>
+            <div *ngIf="duracionTurnos?.hasError('min') && duracionTurnos?.touched">
+                <small class="error">Debe ser mínimo {{ duracionTurnos?.getError('min').min }} minutos.</small>
+            </div>
+            <div *ngIf="duracionTurnos?.hasError('max') && duracionTurnos?.touched">
+                <small class="error">Debe ser máximo {{ duracionTurnos?.getError('max').max }} minutos.</small>
+            </div>
+        </div>
+
+        <!-- Botón de envío -->
+        <button type="submit" [disabled]="form.invalid">
+            Guardar
+        </button>
+    }
+</form> <!-- Cerrar el formulario aquí -->

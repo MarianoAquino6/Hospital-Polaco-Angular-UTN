@@ -21,7 +21,8 @@ export class RegistroMedicoComponent {
   formulario!: FormGroup;
   isLoading = false;
   especialidades: string[] = ['Cardiología', 'Dermatología', 'Pediatría', 'Neurología'];
-  especialidadSeleccionada: string[] = [];
+  especialidadesSeleccionadas: string[] = [];
+  especialidadActual: string = ''; // Nueva propiedad para la selección actual
 
   constructor(private firestore: Firestore, private router: Router, private alert: AlertService) { }
 
@@ -32,7 +33,7 @@ export class RegistroMedicoComponent {
         apellido: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z ]*$')]),
         edad: new FormControl('', [Validators.required, Validators.min(18), Validators.max(80)]),
         documento: new FormControl('', [Validators.required, Validators.pattern('^[0-9]*$'), Validators.minLength(7), Validators.maxLength(8)]),
-        especialidad: new FormControl([], Validators.required),
+        especialidad: new FormControl('', Validators.required),
         otraEspecialidad: new FormControl(''),
         email: new FormControl('', [Validators.required, Validators.email]),
         password: new FormControl('', [
@@ -63,15 +64,28 @@ export class RegistroMedicoComponent {
 
   onEspecialidadChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
-    this.especialidadSeleccionada = Array.from(selectElement.selectedOptions, (option) => option.value);
-
-    // Controlar la validación del campo 'otraEspecialidad'
-    if (this.especialidadSeleccionada.includes('otra')) {
-      this.otraEspecialidad?.setValidators([Validators.required]);
-    } else {
-      this.otraEspecialidad?.clearValidators();
+    const selectedValue = selectElement.value;
+    this.especialidadActual = selectedValue; // Guardamos la especialidad seleccionada
+  
+    // Actualiza el FormControl de especialidad con el valor seleccionado
+    this.formulario.get('especialidad')?.setValue(selectedValue);
+  
+    if (selectedValue !== 'otra' && !this.especialidadesSeleccionadas.includes(selectedValue)) {
+      this.especialidadesSeleccionadas.push(selectedValue);
     }
-    this.otraEspecialidad?.updateValueAndValidity();
+  
+    this.formulario.get('otraEspecialidad')?.updateValueAndValidity();
+  }
+
+  agregarOtraEspecialidad() {
+    const otra = this.formulario.get('otraEspecialidad')?.value;
+    if (otra && !this.especialidadesSeleccionadas.includes(otra)) {
+      this.especialidadesSeleccionadas.push(otra);
+    }
+  }
+
+  eliminarEspecialidad(index: number) {
+    this.especialidadesSeleccionadas.splice(index, 1);
   }
 
   onImageSelected(event: Event, imageField: string) {
@@ -106,14 +120,9 @@ export class RegistroMedicoComponent {
 
   async registrarRespuesta(urls: string[]) {
     try {
-      const especialidades = [...this.especialidadSeleccionada];
-      if (especialidades.includes('otra') && this.otraEspecialidad?.value) {
-        especialidades.push(this.otraEspecialidad.value);
-      }
-
       const email = this.formulario.get('email')?.value;
       const existingUser = await this.checkUserExists(email);
-      
+
       if (existingUser) {
         this.alert.mostrarError('Ya existe un usuario con este correo electrónico.');
         return;
@@ -125,7 +134,7 @@ export class RegistroMedicoComponent {
         apellido: this.formulario.get('apellido')?.value,
         edad: this.formulario.get('edad')?.value,
         documento: this.formulario.get('documento')?.value,
-        especialidad: especialidades.filter((esp) => esp !== 'otra'),
+        especialidades: this.especialidadesFiltradas,
         email: email,
         imagen1: urls[0],
         rol: Rol.Medico,
@@ -134,6 +143,7 @@ export class RegistroMedicoComponent {
       };
 
       await addDoc(col, obj);
+
       const auth = getAuth();
       const userCredential = await createUserWithEmailAndPassword(auth, email, this.formulario.get('password')?.value);
       await sendEmailVerification(userCredential.user);
@@ -170,6 +180,10 @@ export class RegistroMedicoComponent {
 
   get documento() {
     return this.formulario.get('documento');
+  }
+
+  get especialidadesFiltradas(): string[] {
+    return this.especialidadesSeleccionadas.filter(especialidad => especialidad !== 'otra');
   }
 
   get especialidad() {

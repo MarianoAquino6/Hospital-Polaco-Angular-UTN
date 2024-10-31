@@ -1,0 +1,87 @@
+<section>
+    <div class="banner">
+        <h2>SOLICITAR TURNOS</h2>
+    </div>
+</section>
+
+<section class="solicitud-turnos">
+    <div class="filtros-laterales">
+        <h3> FILTROS </h3>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+            <!-- Especialidad -->
+            <label for="especialidad">Especialidad</label>
+            <select formControlName="especialidad" (change)="buscarEspecialistasDisponibles()">
+                <option value="" disabled selected>Elige...</option>
+                <option *ngFor="let especialidad of especialidadesDisponibles" [value]="especialidad">
+                    {{ especialidad }}
+                </option>
+            </select>
+
+            <div *ngIf="especialidad?.hasError('required') && especialidad?.touched">
+                <small class="error">Este campo es obligatorio.</small>
+            </div>
+
+
+            @if (especialistasDisponibles.length > 0)
+            {
+                <label for="especialista">Especialista</label>
+                <select formControlName="especialista">
+                <option value="" disabled selected>Elige...</option>
+                <option *ngFor="let especialista of especialistasDisponibles" [value]="especialista.email">
+                    {{ especialista.nombreCompleto }}
+                </option>
+                </select>
+
+                <div *ngIf="especialista?.hasError('required') && especialista?.touched">
+                    <small class="error">Este campo es obligatorio.</small>
+                </div>
+            }
+            @else {
+                <label for="especialista">Especialista</label>
+                <small class="error">Seleccionar especialidad.</small>
+            }
+
+            <!-- Botón de envío -->
+            <button type="submit" [disabled]="form.invalid">
+                Aplicar
+            </button>
+        </form>
+    </div>
+
+    <div class="turnos">
+        <div class="calendario">
+            <h3> Seleccione una fecha </h3>
+
+            @if(mostrarCalendario)
+            {
+                <app-calendario
+                [fechasDisponibles]="fechasDisponiblesStrings"
+                (dateSelected)="handleDateSelected($event)">
+            </app-calendario>
+
+            <!-- <app-calendario [fechasDisponibles]="['31-10-2024', '01-11-2024', '03-11-2024']" (dateSelected)="handleDateSelected($event)" ></app-calendario> -->
+            }
+            @else
+            {
+            <p>Para utilizar el calendario primero deberás aplicar un filtro</p>
+            <div class="forbidden">
+                <app-calendario></app-calendario>
+            </div>
+            }
+        </div>
+        <div class="horarios">
+            <h3> Seleccione un horario </h3>
+
+            @if (fechaSeleccionada != '') 
+            {
+                <app-horarios-disponibles [disponibilidad]="disponibilidadSeleccionada"></app-horarios-disponibles>
+            }
+            @else 
+            {
+                <p>Para elegir un horario primero deberás elegir una fecha</p>
+            }
+        </div>
+    </div>
+</section>

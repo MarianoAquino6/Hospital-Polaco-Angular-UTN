@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from './servicios/auth.service';
 import { Rol } from './enums/enums';
+import { Admin, Medico, Paciente } from './interfaces/app.interface';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +14,8 @@ import { Rol } from './enums/enums';
 export class AppComponent {
   title = 'examen-ii';
   isAdmin = false;
+  isMedico = false;
+  isPaciente = false;
 
   usuarioLogueadoGeneral: string | null = null;
 
@@ -25,6 +28,8 @@ export class AppComponent {
       if (this.usuarioLogueadoGeneral) {
         const userRole = await this.authService.getUserRole(this.usuarioLogueadoGeneral);
         this.isAdmin = userRole === Rol.Admin; 
+        this.isMedico = userRole === Rol.Medico; 
+        this.isPaciente = userRole === Rol.Paciente; 
       }
     });
   }
