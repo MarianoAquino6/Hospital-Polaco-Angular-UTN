@@ -13,8 +13,8 @@ export class CalendarioComponent implements OnInit {
   currentMonth: number;
   currentYear: number;
   currentDay: number;
-  daysInMonth: (number | null)[]; // Aceptar null
-  selectedDate: string = ''; // Cambia esto para inicializarlo como una cadena vacía
+  daysInMonth: (number | null)[]; 
+  selectedDate: string = '';
   monthNames: string[] = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
@@ -55,12 +55,11 @@ export class CalendarioComponent implements OnInit {
     if (day !== null) {
       const dateToSelect = new Date(this.currentYear, this.currentMonth, day);
       const today = new Date();
-      today.setHours(0, 0, 0, 0); // Asegúrate de que la comparación sea solo por fecha sin las horas
+      today.setHours(0, 0, 0, 0); 
 
-      // Verificar si el día seleccionado es domingo (0 = Domingo)
       if (dateToSelect.getDay() === 0) {
         this.alert.mostrarError('No es posible seleccionar un día domingo, ya que no es laborable.');
-        return; // Evita que se procese la selección si es domingo.
+        return; 
       }
 
       if (dateToSelect >= today) {
@@ -81,20 +80,9 @@ export class CalendarioComponent implements OnInit {
       this.currentMonth = 0;
       this.currentYear++;
     }
-    this.currentDay = new Date().getDate(); // Actualizar el día actual cuando el mes cambia
+    this.currentDay = new Date().getDate(); 
     this.generateDays();
   }
-
-  // isDisabled(day: number | null): boolean {
-  //   if (day === null) return true;
-
-  //   const dateToCheck = new Date(this.currentYear, this.currentMonth, day);
-  //   const today = new Date();
-  //   today.setHours(0, 0, 0, 0);
-
-  //   // Verificar si es domingo (0 = Domingo) o si la fecha es anterior a hoy
-  //   return dateToCheck.getDay() === 0 || dateToCheck < today;
-  // }
 
   isDisabled(day: number | null): boolean {
     if (day === null) return true;
@@ -108,20 +96,17 @@ export class CalendarioComponent implements OnInit {
     const fechaLimite = new Date(today);
     fechaLimite.setDate(today.getDate() + 15);
 
-    // Si `fechasDisponibles` no está definida, se usa el comportamiento normal
     if (!this.fechasDisponibles) {
       return dateToCheck.getDay() === 0 || dateToCheck < today;
     }
 
-    // Convertir `fechasDisponibles` a objetos `Date` y comparar con `dateToCheck`
     const enFechasDisponibles = this.fechasDisponibles.some(fechaStr => {
       const [day, month, year] = fechaStr.split('-').map(Number);
       const fechaDisponible = new Date(year, month - 1, day);
-      fechaDisponible.setHours(0, 0, 0, 0); // Ignorar la hora en la comparación
+      fechaDisponible.setHours(0, 0, 0, 0); 
       return fechaDisponible.getTime() === dateToCheck.getTime();
     });
 
-    // Verificar que la fecha esté en el rango de 15 días y sea una de las fechas disponibles
     return !(enFechasDisponibles && dateToCheck >= today && dateToCheck <= fechaLimite);
   }
 }

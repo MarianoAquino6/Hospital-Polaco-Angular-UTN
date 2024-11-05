@@ -35,25 +35,25 @@
 }
 
 .card {
-    background: linear-gradient(to bottom, rgba(69, 8, 8, 0.8), rgba(69, 8, 8, 0.6)); /* Degradado para el fondo */
-    border-radius: 10px;  /* Asegúrate de que las cards tengan bordes redondeados */
+    background: linear-gradient(to bottom, rgba(69, 8, 8, 0.8), rgba(69, 8, 8, 0.6)); 
+    border-radius: 10px;  
     transition: transform 0.3s ease;
     cursor: pointer;
-    margin: 10px;         /* Espacio entre las cards */
-    overflow: hidden;     /* Esto asegura que los elementos hijos no sobresalgan */
+    margin: 10px;         
+    overflow: hidden;     
 }
 
 .card img {
-    border-radius: 10px 10px 0 0; /* Bordes redondeados solo en la parte superior */
-    width: 100%;           /* Asegúrate de que la imagen ocupe todo el ancho de la card */
-    height: auto;         /* Mantener la proporción de la imagen */
+    border-radius: 10px 10px 0 0; 
+    width: 100%;           
+    height: auto;         
 }
 
 .cuerpo-card {
     color: white;
     font-family: 'ubuntu';
     text-decoration: none;
-    padding: 10px;       /* Espacio interno en el cuerpo de la card */
+    padding: 10px;       
 }
 
 .card:hover {

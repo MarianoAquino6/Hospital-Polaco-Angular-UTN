@@ -1,0 +1,85 @@
+.seleccionar-modo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+    height: 550px;
+}
+
+h3{
+    margin-top: 20px;
+}
+
+.opciones {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    width: 100%;
+    max-width: 800px;
+}
+
+.pacientes, .medicos {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: transform 0.3s;
+    opacity: 0;
+    animation-duration: 0.5s;
+    margin: 0 20px;
+    cursor: pointer;
+}
+
+.pacientes img, .medicos img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 5%;
+}
+
+h4{
+    margin-top: 10px;
+    color: white;
+    font-family: 'ubuntu'
+}
+
+.pacientes:hover, .medicos:hover {
+    transform: scale(1.05);
+}
+
+.pacientes {
+    animation-name: slideInLeft;
+}
+
+.medicos {
+    animation-name: slideInRight;
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.pacientes, .medicos {
+    animation-fill-mode: forwards;
+}

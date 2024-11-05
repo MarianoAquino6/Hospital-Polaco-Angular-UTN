@@ -8,42 +8,36 @@
       <!-- Si es medico -->
       @if (usuarioLogueadoGeneral && isMedico)
       {
-        <li class="username">{{ usuarioLogueadoGeneral }}</li>
-        <li (click)="logout()" routerLink="home">LOG OUT</li>
-        <li routerLink="perfil"><a class="nav-link">MI PERFIL</a></li>
+      <li class="username" style="color: red; cursor:default;">{{ usuarioLogueadoGeneral }}</li>
+      <li routerLink="pacientes"><a class="nav-link">PACIENTES</a></li>
+      <li routerLink="mis-turnos/medicos"><a class="nav-link">MIS TURNOS</a></li>
+      <li routerLink="perfil"><a class="nav-link">MI PERFIL</a></li>
+      <li (click)="logout()" routerLink="home">LOG OUT</li>
       }
       <!-- Si es paciente -->
       @else if (usuarioLogueadoGeneral && isPaciente)
       {
-        <li class="username">{{ usuarioLogueadoGeneral }}</li>
-        <li (click)="logout()" routerLink="home">LOG OUT</li>
-        <li routerLink="solicitar-turnos"><a class="nav-link">SOLICITAR TURNOS</a></li>
-        <li routerLink="perfil"><a class="nav-link">MI PERFIL</a></li>
+      <li class="username" style="color: red; cursor:default;">{{ usuarioLogueadoGeneral }}</li>
+      <li routerLink="solicitar-turnos"><a class="nav-link">SOLICITAR TURNOS</a></li>
+      <li routerLink="mis-turnos/pacientes"><a class="nav-link">MIS TURNOS</a></li>
+      <li routerLink="perfil"><a class="nav-link">MI PERFIL</a></li>
+      <li (click)="logout()" routerLink="home">LOG OUT</li>
       }
       <!-- Si es admin -->
       @else if (usuarioLogueadoGeneral && isAdmin)
       {
-        <li class="username">{{ usuarioLogueadoGeneral }}</li>
-        <li (click)="logout()" routerLink="home">LOG OUT</li>
-        <li routerLink="usuarios"><a class="nav-link">USUARIOS</a></li>
-        <li routerLink="solicitar-turnos"><a class="nav-link">SOLICITAR TURNOS</a></li>
-        <li routerLink="perfil"><a class="nav-link">MI PERFIL</a></li>
+      <li class="username" style="color: red; cursor:default;">{{ usuarioLogueadoGeneral }}</li>
+      <li routerLink="solicitar-turnos"><a class="nav-link">SOLICITAR TURNOS</a></li>
+      <li routerLink="turnos"><a class="nav-link">TURNOS</a></li>
+      <li routerLink="usuarios"><a class="nav-link">USUARIOS</a></li>
+      <li routerLink="perfil"><a class="nav-link">MI PERFIL</a></li>
+      <li (click)="logout()" routerLink="home">LOG OUT</li>
       }
       <!-- Si no esta logueado -->
       @else
       {
-        <li routerLink="solicitar-turnos"><a class="nav-link">SOLICITAR TURNOS (SACAR)</a></li>
-        <li routerLink="login"><a class="nav-link">LOG IN</a></li>
-        <li class="nav-item dropdown" ngbDropdown>
-          <a class="nav-link dropdown-toggle" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown"
-            aria-expanded="false" ngbDropdownToggle>
-            REGISTRARSE
-          </a>
-          <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="navbarScrollingDropdown">
-            <li ngbDropdownItem><a class="dropdown-item" routerLink="registro-pacientes">PACIENTES</a></li>
-            <li ngbDropdownItem><a class="dropdown-item" routerLink="registro-medicos">MÉDICOS</a></li>
-          </ul>
-        </li>
+      <li routerLink="login"><a class="nav-link">LOG IN</a></li>
+      <li routerLink="registro"><a class="nav-link">REGISTRARSE</a></li>
       }
     </ul>
   </nav>

@@ -1,0 +1,105 @@
+.historia-clinica {
+  display: flex;
+  flex-direction: row;
+  margin-left: 100px;
+  margin-right: 100px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  justify-content: center;
+}
+
+.izq{
+  display: flex;
+  flex-direction: column;
+  margin-right: 150px;
+}
+
+.der{
+  display: flex;
+  flex-direction: column;
+  margin-left: 150px;
+}
+
+.dinamicos{
+  display: flex;
+}
+
+.boton{
+  display: flex;
+}
+
+label {
+  color: white; 
+  font-family: 'Ubuntu';
+  margin-bottom: 5px;
+}
+
+input {
+  background-color: #333; 
+  border: 2px solid #f00; 
+  color: #fff; 
+  padding: 10px;
+  width: 100%; 
+  max-width: 500px; 
+  border-radius: 5px; 
+  transition: border 0.3s ease, box-shadow 0.3s ease; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); 
+  margin-bottom: 5px;
+}
+
+.par{
+  margin-bottom: 10px;
+}
+
+input:focus {
+  border: 2px solid #fff; 
+  outline: none; 
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); 
+}
+
+button {
+  margin-top: 10px;
+  background-color: #f00; 
+  border: none; 
+  color: #fff; 
+  padding: 10px 20px; 
+  cursor: pointer; 
+  font-size: 1em; 
+  border-radius: 5px; 
+  transition: background-color 0.3s, box-shadow 0.3s; 
+  margin-bottom: 20px; /
+}
+
+button:hover {
+  background-color: #c00; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+}
+
+button:disabled {
+  background-color: #666; 
+  cursor: not-allowed; 
+}
+
+.error {
+  color: #ff3333; 
+  font-size: 0.9em; 
+  margin-top: 5px; 
+}
+
+
+
+.label {
+  font-family: 'ubuntu'; 
+  color: red; 
+}
+
+.historia-clinica ul {
+  list-style-type: none; 
+  padding: 0; 
+  margin: 0; 
+}
+
+.historia-clinica li {
+  margin-bottom: 10px; 
+  color: white;
+}

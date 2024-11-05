@@ -39,7 +39,6 @@ export class GestionAccesoComponent {
 
     const observable: Observable<Medico[]> = collectionData(filteredQuery, { idField: 'id' });
 
-    // Modificar Actor[]
     this.sub = observable.subscribe((respuesta: Medico[]) => {
       this.objetos = respuesta;
     });
@@ -50,25 +49,20 @@ export class GestionAccesoComponent {
   }
 
   async aceptarUsuario() {
-    // Referencia a la colección
     const col = collection(this.firestore, 'usuarios');
 
-    // Crear una consulta para buscar al usuario por email
     const filteredQuery = query(
       col,
-      where('email', '==', this.objetoSeleccionado) // Suponiendo que 'objetoSeleccionado' es el email
+      where('email', '==', this.objetoSeleccionado)
     );
 
-    // Obtener los documentos que coinciden con la consulta
     const querySnapshot = await getDocs(filteredQuery);
 
     if (!querySnapshot.empty) {
       this.isLoading = true;
 
-      // Si se encuentra el usuario
-      const userDoc = querySnapshot.docs[0]; // Obtiene el primer documento encontrado
+      const userDoc = querySnapshot.docs[0]; 
 
-      // Actualizar el campo 'aceptado' a true
       await updateDoc(doc(col, userDoc.id), { aceptado: true });
       this.alert.mostrarSuccess('Usuario aceptado correctamente.');
 

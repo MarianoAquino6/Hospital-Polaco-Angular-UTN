@@ -53,5 +53,49 @@ p {
     padding: 25px 0;
     text-align: center;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+
+/* Estilo personalizado para el popup */
+.swal2-popup.colored-toast {
+    border-radius: 8px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Botón de confirmación en rojo */
+.swal2-confirm.confirm-button {
+    background-color: #aa0715 !important;
+    /* Rojo */
+    color: #fff !important;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+.swal2-confirm.confirm-button:hover {
+    background-color: #720a0d !important;
+    /* Rojo más oscuro */
+}
+
+/* Botón de cancelación */
+.swal2-cancel.cancel-button {
+    background-color: #666 !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+}
+
+.swal2-cancel.cancel-button:hover {
+    background-color: #555 !important;
+}

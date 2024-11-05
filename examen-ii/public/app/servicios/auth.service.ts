@@ -8,18 +8,19 @@ interface Usuario {
   email: string;
   rol: Rol;
   aceptado: boolean;
+  habilitado?: boolean;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  // Almaceno el estado del usuario logueado en el BehaviorSubject
   private usuarioLogueadoSource = new BehaviorSubject<string | null>(null);
+  private pacienteHistoriaClinicaEmail = new BehaviorSubject<string | null>(null);
   sub!: Subscription;
 
-  // Observable al que los componentes se pueden suscribir para escuchar cambios (En este caso se suscribe el componente principal)
   usuarioLogueado$ = this.usuarioLogueadoSource.asObservable();
+  pacienteHistoriaClinicaEmail$ = this.pacienteHistoriaClinicaEmail.asObservable();
 
   constructor(private firestore: Firestore) { }
 
@@ -27,12 +28,26 @@ export class AuthService {
     return this.usuarioLogueadoSource.value;
   }
 
-  //Recibo el user y lo meto en usuarioLogueadoSource
-  setUsuarioLogueado(usuario: string | null) {
-    this.usuarioLogueadoSource.next(usuario);
+  obtenerUsuarioLogueado() {
+    return this.usuarioLogueado;
   }
 
-  //Convierto usuarioLogueadoSource a null
+  setUsuarioLogueado(usuario: string | null) {
+    this.usuarioLogueadoSource.next(usuario);
+
+    console.log('Se seteo el usuario logueado: ' + this.usuarioLogueado)
+  }
+
+  setPacienteHistoriaClinica(pacienteEmail: string | null) {
+    this.pacienteHistoriaClinicaEmail.next(pacienteEmail);
+
+    console.log('Se seteo el paciente para la HC: ' + this.usuarioLogueado)
+  }
+
+  get pacienteHistoriaClinica(): string | null {
+    return this.pacienteHistoriaClinicaEmail.value;
+  }
+
   logout() {
     this.usuarioLogueadoSource.next(null);
   }
@@ -57,10 +72,23 @@ export class AuthService {
 
     if (!querySnapshot.empty) {
       const userDoc = querySnapshot.docs[0].data() as Usuario;
-      return userDoc.aceptado; // Devolvemos el valor del campo 'aceptado'
+      return userDoc.aceptado; 
     }
 
-    return null; // Retorna null si no se encuentra el usuario
+    return null; 
+  }
+
+  async usuarioEstaHabilitado(email: string): Promise<boolean | null> {
+    const col = collection(this.firestore, 'usuarios');
+    const filteredQuery = query(col, where('email', '==', email));
+    const querySnapshot = await getDocs(filteredQuery);
+
+    if (!querySnapshot.empty) {
+      const userDoc = querySnapshot.docs[0].data() as Usuario;
+      return userDoc.habilitado ?? null; 
+    }
+
+    return null;
   }
 
   async getUserEntity(email: string): Promise<Medico | Paciente | Admin | null> {
@@ -69,7 +97,6 @@ export class AuthService {
       const filteredQuery = query(col, where('email', '==', email));
       const querySnapshot = await getDocs(filteredQuery);
 
-      // Verificamos si se encontró el documento
       if (querySnapshot.empty) {
         console.warn(`No se encontró un usuario con el email: ${email}`);
         return null;
@@ -79,8 +106,21 @@ export class AuthService {
       return userDoc;
     } catch (error) {
       console.error('Error al obtener el usuario:', error);
-      return null; // Retornar null si hay algún error
+      return null;
     }
+  }
+
+  async obtenerNombreCompletoDesdeEmail(email: string): Promise<string | null> {
+    const col = collection(this.firestore, 'usuarios');
+    const filteredQuery = query(col, where('email', '==', email));
+    const querySnapshot = await getDocs(filteredQuery);
+
+    if (!querySnapshot.empty) {
+      const userDoc = querySnapshot.docs[0].data();
+      return `${userDoc['apellido'] ?? ''} ${userDoc['nombre'] ?? ''}`.trim() || null;
+    }
+
+    return null; 
   }
 
   isLoggedIn(): boolean {

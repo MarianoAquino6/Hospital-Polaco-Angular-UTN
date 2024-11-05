@@ -11,28 +11,51 @@
         <div class="imagen">
             <img src="assets/img/login-page.png" alt="">
         </div>
-        
+
         <div class="login-principal">
             <div class="login">
                 <h3>Ingresa a tu cuenta</h3>
 
                 <form id="login-form">
                     <label for="username">USUARIO</label>
-                    <input type="text" id="username" name="username" 
-                    placeholder="Ingresa tu email"
-                    required [(ngModel)]="usernameLogin">
+                    <input type="text" id="username" name="username" placeholder="Ingresa tu email" required
+                        [(ngModel)]="usernameLogin">
                     <label for="password">CONTRASEÑA</label>
-                    <input type="password" id="password" name="password" 
-                    placeholder="Ingresa tu contraseña"
-                    required [(ngModel)]="passLogin">
+                    <input type="password" id="password" name="password" placeholder="Ingresa tu contraseña" required
+                        [(ngModel)]="passLogin">
 
                     <div class="button-group">
                         <button type="submit" class="btn btn-danger" (click)="login()">INGRESAR</button>
-                        <button class="btn btn-danger" (click)="autocompletarPaciente()">AUTO PACIENTE</button>
-                        <button class="btn btn-danger" (click)="autocompletarMedico()">AUTO MEDICO</button>
-                        <button class="btn btn-danger" (click)="autocompletarAdmin()">AUTO ADMIN</button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <div class="auto">
+            <h4> AUTOCOMPLETAR </h4>
+            <div class="item">
+                <img src="assets/img/paciente 1 A.webp" alt="" (click)="autocompletarPaciente1()">
+                <span>Paciente 1</span>
+            </div>
+            <div class="item">
+                <img src="assets/img/paciente 2 A.jpg" alt="" (click)="autocompletarPaciente2()">
+                <span>Paciente 2</span>
+            </div>
+            <div class="item">
+                <img src="assets/img/paciente 3 A.webp" alt="" (click)="autocompletarPaciente3()">
+                <span>Paciente 3</span>
+            </div>
+            <div class="item">
+                <img src="assets/img/medico 1.avif" alt="" (click)="autocompletarMedico1()">
+                <span>Médico 1</span>
+            </div>
+            <div class="item">
+                <img src="assets/img/medico 2.avif" alt="" (click)="autocompletarMedico2()">
+                <span>Médico 2</span>
+            </div>
+            <div class="item">
+                <img src="assets/img/admin 1.jpg" alt="" (click)="autocompletarAdmin()">
+                <span>Admin</span>
             </div>
         </div>
     </div>

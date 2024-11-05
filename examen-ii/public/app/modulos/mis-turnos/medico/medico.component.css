@@ -1,0 +1,128 @@
+.turnos {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 0;
+    min-height: 70vh;
+}
+
+.busqueda {
+    display: flex;
+    margin-bottom: 20px;
+    width: 80%;
+    max-width: 600px;
+}
+
+.busqueda input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #555;
+    border-radius: 5px;
+    background-color: #333;
+    color: #fff;
+    font-size: 1em;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.busqueda input[type="text"]::placeholder {
+    color: #aaa;
+    font-style: italic;
+}
+
+.busqueda input[type="text"]:focus {
+    outline: none;
+    border-color: #f00;
+    box-shadow: 0px 4px 12px rgba(255, 0, 0, 0.3);
+}
+
+.tabla {
+    display: flex;
+    flex: 40%;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 20px;
+}
+
+.tabla-scroll {
+    max-height: 400px;
+    overflow-y: auto;
+    width: 100%;
+    border: 1px solid #444;
+    background-color: #555;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #444;
+}
+
+th {
+    background-color: #333;
+    color: #f00;
+}
+
+td {
+    background-color: #555;
+    color: #fff;
+    cursor: pointer;
+}
+
+tr:hover {
+    background-color: #660202;
+}
+
+tr:hover td {
+    background-color: #660202;
+}
+
+td.cancel-icon-cell {
+    text-align: center;
+    cursor: pointer;
+}
+
+td.cancel-icon-cell i.fa-times {
+    color: #d9534f;
+    font-size: 1.2em;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+td.cancel-icon-cell i.fa-times:hover {
+    color: #c9302c;
+    transform: scale(1.8);
+}
+
+td.cancel-icon-cell i.fa-times.disabled {
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+.inhabilitado{
+    color: red;
+    font-weight:500;
+}
+
+i.fa-ban{
+    color: red;
+}
+
+i.fa-check, i.fa-flag-checkered{
+    color: rgb(13, 223, 13);
+}
+
+i.fa-comment{
+    color: yellow;
+}
+
+i:hover{
+    transition: color 0.3s ease, transform 0.3s ease;
+    transform: scale(1.8);
+}

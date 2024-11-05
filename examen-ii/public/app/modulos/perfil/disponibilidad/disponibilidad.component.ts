@@ -14,6 +14,7 @@ export class DisponibilidadComponent implements OnInit {
   fechaSeleccionada: string = '';
   form!: FormGroup;
   isLoading = false;
+  horas: string[] = [];
 
   constructor(private alert: AlertService, private firestore: Firestore) { }
 
@@ -27,10 +28,12 @@ export class DisponibilidadComponent implements OnInit {
       horaInicio: new FormControl('', Validators.required),
       horaFin: new FormControl('', Validators.required),
       especialidad: new FormControl('', Validators.required)
-    });
+    },
+      { validators: this.horasValidator() });
   }
 
   handleDateSelected(selectedDate: string) {
+    console.log('Recibi el dia:' + selectedDate)
     this.fechaSeleccionada = selectedDate;
     this.ajustarHorariosPorDia();
   }
@@ -39,88 +42,64 @@ export class DisponibilidadComponent implements OnInit {
     const fecha = this.convertirFecha(this.fechaSeleccionada);
     if (!fecha) return;
 
-    const diaSemana = fecha.getDay(); // 0: Domingo, 1: Lunes, ..., 6: Sábado
+    const diaSemana = fecha.getDay();
+    this.generarHoras(diaSemana);
 
-    let horaInicioMin = '08:00';
-    let horaFinMax = '19:00';
-
-    if (diaSemana === 6) { // Sábado
-      horaFinMax = '14:00';
-    } else if (diaSemana === 0) { // Domingo
+    if (diaSemana === 0) { 
       this.form.get('horaInicio')?.disable();
       this.form.get('horaFin')?.disable();
-      return;
     } else {
       this.form.get('horaInicio')?.enable();
       this.form.get('horaFin')?.enable();
     }
-
-    this.setearLimitesHorario(horaInicioMin, horaFinMax);
   }
 
-  setearLimitesHorario(horaInicioMin: string, horaFinMax: string) {
-    const horaInicio = this.form.get('horaInicio');
-    const horaFin = this.form.get('horaFin');
+  generarHoras(diaSemana: number) {
+    console.log('Esta generando las horas')
+    this.horas = []; 
+    let horaInicioMin: string;
+    let horaFinMax: string;
 
-    horaInicio?.setValidators([
-      Validators.required,
-      this.horaMinimaValidator(horaInicioMin, horaFinMax)
-    ]);
+    if (diaSemana === 6) { 
+      horaInicioMin = '08:00';
+      horaFinMax = '14:00';
+    } else { 
+      horaInicioMin = '08:00';
+      horaFinMax = '19:00';
+    }
 
-    horaFin?.setValidators([
-      Validators.required,
-      this.horaMaximaValidator(horaInicioMin, horaFinMax),
-      this.horaFinMayorQueInicioValidator()
-    ]);
+    for (let h = parseInt(horaInicioMin.split(':')[0]); h <= parseInt(horaFinMax.split(':')[0]); h++) {
+      for (let m = 0; m < 60; m += 10) { 
+        const hora = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
 
-    horaInicio?.updateValueAndValidity();
-    horaFin?.updateValueAndValidity();
+        if (h === parseInt(horaFinMax.split(':')[0]) && m > parseInt(horaFinMax.split(':')[1])) {
+          break; 
+        }
+
+        if (h > parseInt(horaInicioMin.split(':')[0]) || (h === parseInt(horaInicioMin.split(':')[0]) && m >= parseInt(horaInicioMin.split(':')[1]))) {
+          this.horas.push(hora);
+        }
+      }
+    }
   }
 
-  horaMinimaValidator(min: string, max: string): ValidatorFn {
+  convertirFecha(fechaString: string): Date | null {
+    const partes = fechaString.split('-');
+    if (partes.length !== 3) return null;
+
+    const [dia, mes, anio] = partes.map(Number);
+    return new Date(anio, mes - 1, dia); 
+  }
+
+  horasValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-      const value = control.value;
-      return value && (value < min || value > max)
-        ? { fueraDeRango: true }
-        : null;
-    };
-  }
-
-  horaMaximaValidator(min: string, max: string): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const value = control.value;
-      return value && (value < min || value > max)
-        ? { fueraDeRango: true }
-        : null;
-    };
-  }
-
-  horaFinMayorQueInicioValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const horaInicio = this.form.get('horaInicio')?.value;
-      const horaFin = control.value;
+      const horaInicio = control.get('horaInicio')?.value;
+      const horaFin = control.get('horaFin')?.value;
 
       return horaInicio && horaFin && horaFin <= horaInicio
         ? { finMenorQueInicio: true }
         : null;
     };
-  }
-
-  convertirFecha(fechaString: string): Date | null {
-    const partes = fechaString.split('/');
-    if (partes.length !== 3) return null;
-
-    const [dia, mes, anio] = partes.map(Number);
-    return new Date(anio, mes - 1, dia); // Los meses en JavaScript van de 0 a 11
-  }
-
-  validarHorarios() {
-    const horaInicio = this.form.get('horaInicio')?.value;
-    const horaFin = this.form.get('horaFin')?.value;
-
-    if (horaInicio && horaFin) {
-      this.form.get('horaFin')?.updateValueAndValidity();
-    }
   }
 
   async onSubmit(): Promise<void> {
@@ -147,29 +126,24 @@ export class DisponibilidadComponent implements OnInit {
 
     const emailMedico = this.usuarioLogueadoEntidad.email;
     const especialidadSeleccionada = this.form.get('especialidad')?.value;
-    const fechaSeleccionada = this.fechaSeleccionada.replace(/\//g, "-"); // Cambiar formato de fecha a "31-10-2024"
+    const fechaSeleccionada = this.fechaSeleccionada.replace(/\//g, "-"); 
     const horaInicio = this.form.get('horaInicio')?.value;
     const horaFin = this.form.get('horaFin')?.value;
-    const duracionTurnos = this.form.get('duracionTurnos')?.value; // Extrae el valor de duracionTurnos
+    const duracionTurnos = this.form.get('duracionTurnos')?.value; 
 
     try {
-      // 1. Crear referencia a la colección de "disponibilidades" usando el email del médico.
       const medicoDocRef = doc(this.firestore, `disponibilidades/${emailMedico}`);
-
-      // 2. Obtener el documento del médico
       const medicoDocSnap = await getDoc(medicoDocRef);
 
       if (medicoDocSnap.exists()) {
         const disponibilidadExistente = medicoDocSnap.data();
 
-        // 3. Verificar si hay algún solapamiento en la misma fecha para cualquier especialidad
         for (const especialidad in disponibilidadExistente) {
           const disponibilidad = disponibilidadExistente[especialidad]?.[fechaSeleccionada];
 
           if (disponibilidad) {
             const { horaInicio: inicioExistente, horaFin: finExistente } = disponibilidad;
 
-            // Revisar si hay solapamiento
             if (this.checkSolapamiento(inicioExistente, finExistente, horaInicio, horaFin)) {
               this.alert.mostrarError(
                 'Ya existe una disponibilidad en el mismo horario en otra especialidad. Por favor, elige otro horario.'
@@ -178,34 +152,37 @@ export class DisponibilidadComponent implements OnInit {
             }
           }
         }
-      }
 
-      // 4. Crear la estructura de disponibilidad para guardar
-      const disponibilidadData = {
-        [especialidadSeleccionada]: {
-          [fechaSeleccionada]: {
+        const fieldPath = `${especialidadSeleccionada}.${fechaSeleccionada}`;
+        const disponibilidadData = {
+          [fieldPath]: {
             horaInicio,
             horaFin,
-            duracionTurnos // Almacena solo el valor, no el control
+            duracionTurnos
           }
-        }
-      };
-
-      // 5. Guardar o actualizar la disponibilidad
-      if (medicoDocSnap.exists()) {
+        };
         await updateDoc(medicoDocRef, disponibilidadData);
         this.alert.mostrarSuccess('Disponibilidad guardada o actualizada correctamente.');
       } else {
+        const disponibilidadData = {
+          [especialidadSeleccionada]: {
+            [fechaSeleccionada]: {
+              horaInicio,
+              horaFin,
+              duracionTurnos
+            }
+          }
+        };
         await setDoc(medicoDocRef, disponibilidadData);
-        this.alert.mostrarSuccess('Disponibilidad guardada exitosamente.');
+        this.alert.mostrarSuccess('Disponibilidad guardada correctamente.');
       }
+
     } catch (error) {
       console.error('Error al guardar la disponibilidad:', error);
       this.alert.mostrarError('Hubo un problema al guardar la disponibilidad.');
     }
   }
 
-  // Función para verificar solapamientos
   checkSolapamiento(inicioExistente: string, finExistente: string, nuevoInicio: string, nuevoFin: string): boolean {
     return (
       (nuevoInicio >= inicioExistente && nuevoInicio < finExistente) ||

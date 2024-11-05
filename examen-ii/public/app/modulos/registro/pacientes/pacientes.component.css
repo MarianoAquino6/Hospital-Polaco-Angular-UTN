@@ -1,0 +1,103 @@
+.container-principal {
+    display: flex;
+    flex-direction: row;
+}
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    flex: 65%;
+    margin-left: 60px;
+    margin-top: 10px;
+}
+
+.inputs {
+    display: flex;
+    flex-direction: row;
+}
+
+.inputs-izq, .inputs-der {
+    display: flex;
+    flex-direction: column;
+    flex: 50%;
+    margin-right: 20px; 
+}
+
+h3 {
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    color: white; 
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px; 
+}
+
+label {
+    color: white;
+    font-family: 'ubuntu';
+    margin-bottom: 5px;
+}
+
+input {
+    background-color: #333;
+    border: 2px solid #f00;
+    color: #fff;
+    padding: 10px;
+    width: 80%;
+    max-width: 500px;
+    margin-bottom: 10px;
+    border-radius: 5px; 
+    transition: border 0.3s ease; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); 
+}
+
+input:focus {
+    border: 2px solid #fff; 
+    outline: none; 
+}
+
+button[type="submit"] {
+    margin-top: 10px;
+    background-color: #f00;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1em;
+    border-radius: 5px; 
+    margin-bottom: 20px;
+}
+
+button[type="submit"]:hover {
+    background-color: #c00;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); 
+}
+
+button[type="submit"]:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+}
+
+.error {
+    color: #ff3333;
+    font-size: 1em; 
+    margin-top: 5px;
+}
+
+.imagen {
+    display: flex;
+    flex: 35%; 
+    align-items: center;
+    justify-content: left;
+    overflow: hidden; 
+}
+
+.imagen img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+}

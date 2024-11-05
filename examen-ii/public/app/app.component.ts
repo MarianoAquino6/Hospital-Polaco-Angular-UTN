@@ -34,7 +34,6 @@ export class AppComponent {
     });
   }
 
-  // Llamo al metodo logout del AuthService para que cambie el valor del usuario logueado a null
   logout() {
     this.authService.logout();
   }

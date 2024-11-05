@@ -1,9 +1,14 @@
 <div *ngIf="turnos.length > 0">
     <label class="info">Horarios Disponibles</label>
+
     <div *ngFor="let turno of turnos" class="turnos-rb">
         <label>
-            <input type="radio" name="turno" [value]="turno">
+            <input type="radio" name="turno" [value]="turno" (change)="seleccionarTurno(turno)">
             {{ turno }}
         </label>
     </div>
+</div>
+<div *ngIf="turnos.length === 0">
+    <label class="info">Horarios Disponibles</label>
+    <p>Ya no quedan turnos disponibles para la fecha seleccionada!!</p>
 </div>

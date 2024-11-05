@@ -3,32 +3,27 @@
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    min-height: 70vh;
 }
 
 .imagen {
     display: flex;
-    flex: 60%;
-    /* Ajusta aquí el tamaño deseado del contenedor */
+    flex: 55%;
     align-items: center;
     justify-content: left;
     overflow: hidden;
-    /* Oculta cualquier contenido que se desborde */
 }
 
 .imagen img {
     width: 100%;
-    /* La imagen se adapta al ancho del contenedor */
     height: 100%;
-    /* Mantiene la proporción original */
     object-fit: cover;
-    /* Asegura que la imagen cubra todo el área del contenedor */
 }
 
 .login-principal {
-    flex: 40%;
+    flex: 30%;
     display: flex;
     flex-direction: column;
-    padding: 30px;
     margin-left: 40px;
 }
 
@@ -37,7 +32,7 @@
     flex-direction: column;
 }
 
-.login label{
+.login label {
     display: block;
     width: 100%;
     color: white;
@@ -45,7 +40,7 @@
     margin-bottom: 5px;
 }
 
-input{
+input {
     background-color: #333;
     border: 2px solid #f00;
     color: #fff;
@@ -71,14 +66,53 @@ input{
 .button-group {
     margin-top: 20px;
     display: flex;
-    flex-direction: column; /* Cambia a 'column' para alinearlos verticalmente */
-    align-items: flex-end; /* Alinea todos los botones a la derecha */
-    width: 100%;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 40%;
     max-width: 400px;
 }
 
 .button-group button {
-    width: 100%; /* Asegura que todos los botones ocupen el 100% del ancho del contenedor */
+    width: 100%;
     padding: 10px;
-    margin: 5px 0; /* Margen vertical entre botones */
+    margin: 5px 0;
+}
+
+.auto {
+    display: flex;
+    flex: 20%;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    cursor: pointer;
+}
+
+.auto img {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    object-fit: cover;
+    margin-right: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s;
+}
+
+.auto img:hover {
+    transform: scale(1.05);
+}
+
+.auto span {
+    color: white;
+    font-family: 'ubuntu';
+    font-size: 14px;
+}
+
+h4 {
+    color: white;
+    font-family: 'ubuntu';
 }

@@ -3,3 +3,11 @@ export enum Rol {
     Paciente = 'Paciente',
     Medico = 'Medico',
 }
+
+export enum EstadoTurno {
+    Pendiente = 'Pendiente',
+    Aceptado = 'Aceptado',
+    Rechazado = 'Rechazado',
+    Finalizado = 'Finalizado',
+    Cancelado = 'Cancelado'
+}

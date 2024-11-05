@@ -3,7 +3,6 @@
     margin: auto;
     text-align: center;
     background-color: #2e2d2d;
-    /* Fondo oscuro */
     border-radius: 10px;
     padding: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -20,21 +19,17 @@ header {
 
 button {
     background-color: #a42315;
-    /* Rojo vibrante */
     color: white;
     border: none;
     border-radius: 5px;
     padding: 8px 12px;
-    /* Ajustar el tamaño del botón */
     cursor: pointer;
     transition: background-color 0.3s;
     font-size: 0.9em;
-    /* Tamaño de fuente más pequeño */
 }
 
 button:hover {
     background-color: #6d1b12;
-    /* Color más oscuro al pasar el ratón */
 }
 
 .days {
@@ -47,7 +42,6 @@ button:hover {
     padding: 15px;
     cursor: pointer;
     background-color: #4c4b4b;
-    /* Fondo claro para los días */
     border: none;
     border-radius: 5px;
     transition: background-color 0.3s, transform 0.3s;
@@ -56,14 +50,11 @@ button:hover {
 
 .day:hover {
     background-color: #113c7c;
-    /* Color de fondo al pasar el ratón */
     transform: scale(1.1);
-    /* Efecto de aumento */
 }
 
 .day.selected {
     background-color: #21cf4a;
-    /* Color para el día seleccionado */
     color: white;
     font-weight: bold;
 }
@@ -85,26 +76,23 @@ button:hover {
 
 .weekday {
     background-color: #34495e;
-    /* Fondo para los días de la semana */
     padding: 10px;
     border-radius: 5px;
 }
 
 .day[ngClass="null"] {
     background-color: transparent;
-    /* Fondo transparente para días vacíos */
     cursor: default;
-    /* No es interactivo */
 }
 
 .disabled-day {
-    background-color: #b91e1e; /* Rojo para días deshabilitados */
+    background-color: #b91e1e; 
     color: white;
     cursor: not-allowed;
     opacity: 0.6;
   }
   
   .disabled-day:hover {
-    background-color: #b91e1e; /* Mantener el mismo color en hover */
-    transform: none; /* Quitar efecto de aumento */
+    background-color: #b91e1e; 
+    transform: none;
   }

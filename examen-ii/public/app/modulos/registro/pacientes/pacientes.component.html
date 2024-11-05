@@ -1,0 +1,143 @@
+<section>
+    <div class="banner">
+        <h2>REGISTRO DE PACIENTES</h2>
+    </div>
+</section>
+
+<section class="container-principal">
+    <app-loading [isLoading]="isLoading"></app-loading>
+
+    <div class="formulario">
+        <h3>Completa los siguientes datos</h3>
+        <form [formGroup]="formulario" (ngSubmit)="onSubmit()">
+
+            <div class="inputs">
+                <div class="inputs-izq">
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" formControlName="nombre" placeholder="Ingresa tu nombre" />
+                        <div *ngIf="nombre?.hasError('required') && nombre?.touched">
+                            <small class="error">Este campo es obligatorio.</small>
+                        </div>
+                        <div *ngIf="nombre?.hasError('pattern') && nombre?.touched">
+                            <small class="error">Solo se permiten letras y espacios.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="apellido">Apellido:</label>
+                        <input type="text" id="apellido" formControlName="apellido" placeholder="Ingresa tu apellido" />
+                        <div *ngIf="apellido?.hasError('required') && apellido?.touched">
+                            <small class="error">Este campo es obligatorio.</small>
+                        </div>
+                        <div *ngIf="apellido?.hasError('pattern') && apellido?.touched">
+                            <small class="error">Solo se permiten letras y espacios.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edad">Edad:</label>
+                        <input type="number" id="edad" formControlName="edad"
+                            placeholder="Ingresa tu edad (De 5 a 120)" />
+                        <div *ngIf="edad?.hasError('required') && edad?.touched">
+                            <small class="error">Este campo es obligatorio.</small>
+                        </div>
+                        <div *ngIf="edad?.hasError('min') && edad?.touched">
+                            <small class="error">Debes tener mínimo {{ edad?.getError('min').min }} años.</small>
+                        </div>
+                        <div *ngIf="edad?.hasError('max') && edad?.touched">
+                            <small class="error">Debes tener máximo {{ edad?.getError('max').max }} años.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="documento">Número de Documento:</label>
+                        <input type="text" id="documento" formControlName="documento"
+                            placeholder="Ingresa el número de documento (De 7 a 8 caracteres)" maxlength="8" />
+                        <div *ngIf="documento?.hasError('required') && documento?.touched">
+                            <small class="error">Este campo es obligatorio.</small>
+                        </div>
+                        <div *ngIf="documento?.hasError('pattern') && documento?.touched">
+                            <small class="error">Este campo debe contener solo números.</small>
+                        </div>
+                        <div *ngIf="documento?.hasError('maxlength') && documento?.touched">
+                            <small class="error">Solo se permite hasta {{
+                                documento?.getError('maxlength').requiredLength }}
+                                caracteres.</small>
+                        </div>
+                        <div *ngIf="documento?.hasError('minlength') && documento?.touched">
+                            <small class="error">Solo se permite desde {{
+                                documento?.getError('minlength').requiredLength }}
+                                caracteres.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="obraSocial">Obra Social:</label>
+                        <input type="text" id="obraSocial" formControlName="obraSocial"
+                            placeholder="Ingresa tu obra social" />
+                        <div *ngIf="obraSocial?.hasError('required') && obraSocial?.touched">
+                            <small class="error">Este campo es obligatorio.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="inputs-der">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" formControlName="email" placeholder="Ingresa tu email" />
+                        <div *ngIf="email?.hasError('required') && email?.touched">
+                            <small class="error">Este campo es obligatorio.</small>
+                        </div>
+                        <div *ngIf="email?.hasError('email') && email?.touched">
+                            <small class="error">Debes ingresar un email válido.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Contraseña:</label>
+                        <input type="password" id="password" formControlName="password"
+                            placeholder="Minimo 6 caracteres" />
+                        <div *ngIf="password?.hasError('required') && password?.touched">
+                            <small class="error">Este campo es obligatorio.</small>
+                        </div>
+                        <div *ngIf="password?.hasError('minlength') && password?.touched">
+                            <small class="error">La contraseña debe tener al menos {{
+                                password?.getError('minlength').requiredLength }} caracteres.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="imagen1">Imagen de Perfil 1:</label>
+                        <input type="file" id="imagen1" formControlName="imagen1"
+                            (change)="onImageSelected($event, 'imagen1')" accept="image/*" />
+                        <div *ngIf="imagen1?.hasError('required') && imagen1?.touched">
+                            <small class="error">Este campo es obligatorio.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="imagen2">Imagen de Perfil 2:</label>
+                        <input type="file" id="imagen2" formControlName="imagen2"
+                            (change)="onImageSelected($event, 'imagen2')" accept="image/*" />
+                        <div *ngIf="imagen2?.hasError('required') && imagen2?.touched">
+                            <small class="error">Este campo es obligatorio.</small>
+                        </div>
+                    </div>
+
+                    <re-captcha (resolved)="onCaptchaResolved($event)"
+                        siteKey="6Lc4VnQqAAAAACuZC-R8Yco-rqXSdMiHn30qaZFD" theme="dark">
+                    </re-captcha>
+                </div>
+            </div>
+
+            <button type="submit" [disabled]="formulario.invalid || !captchaValido">
+                Enviar
+            </button>
+        </form>
+    </div>
+
+    <div class="imagen">
+        <img src="assets/img/registro-pacientes.webp" alt="">
+    </div>
+</section>

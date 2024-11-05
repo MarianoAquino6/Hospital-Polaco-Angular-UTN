@@ -54,7 +54,6 @@ select option {
 .error {
     color: #ff3333;
     font-size: 1em;
-    /* Tamaño aumentado */
     margin-top: 5px;
 }
 
@@ -67,7 +66,6 @@ button[type="submit"] {
     cursor: pointer;
     font-size: 1em;
     border-radius: 5px;
-    /* Bordes redondeados */
     margin-bottom: 20px;
     max-width: 150px;
 }
@@ -75,7 +73,6 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background-color: #c00;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    /* Sombra en hover */
 }
 
 button[type="submit"]:disabled {
@@ -110,18 +107,13 @@ button[type="submit"]:disabled {
 
 .forbidden {
     filter: brightness(0.5);
-    /* Reduce el brillo al 50% */
     pointer-events: none;
-    /* Deshabilita la interacción */
     opacity: 0.7;
-    /* Da un efecto de oscurecimiento adicional */
 }
 
 .forbidden app-calendario {
     pointer-events: none;
-    /* Deshabilita la interacción dentro del calendario */
     user-select: none;
-    /* Evita la selección de texto u otros elementos */
 }
 
 .horarios {
@@ -140,4 +132,9 @@ button[type="submit"]:disabled {
 
 .horarios p{
     margin-bottom: 30px;
+}
+
+.horarios button{
+    margin-top: 30px;
+    justify-content: right;
 }

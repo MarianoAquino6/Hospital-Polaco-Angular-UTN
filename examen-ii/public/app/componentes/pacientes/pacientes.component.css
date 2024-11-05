@@ -1,0 +1,98 @@
+.pacientes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px 0;
+    min-height: 70vh;
+}
+
+.tabla {
+    display: flex;
+    flex: 40%;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 20px;
+}
+
+.tabla-scroll {
+    max-height: 400px;
+    overflow-y: auto;
+    width: 100%;
+    border: 1px solid #444;
+    background-color: #555;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #444;
+}
+
+th {
+    background-color: #333;
+    color: #f00;
+}
+
+td {
+    background-color: #555;
+    color: #fff;
+    cursor: pointer;
+}
+
+tr:hover {
+    background-color: #8B0000;
+}
+
+tr:hover td {
+    background-color: #8B0000;
+}
+
+tr:hover i.fa {
+    color: #777;
+}
+
+.verde button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.verde button:hover {
+    background-color: #218838;
+}
+
+.rojo button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.rojo button:hover {
+    background-color: #c82333;
+}
+
+i.fa-notes-medical {
+    color: yellow;
+}
+
+i:hover {
+    transition: color 0.3s ease, transform 0.3s ease;
+    transform: scale(1.8);
+}
