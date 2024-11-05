@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from '../../../servicios/alert.service';
-import { Firestore, collection, doc, getDoc, getDocs, query, where } from '@angular/fire/firestore';
-import { Disponibilidad } from '../../../interfaces/app.interface';
+import { Firestore, addDoc, collection, doc, getDoc, getDocs, query, setDoc, where } from '@angular/fire/firestore';
+import { Disponibilidad, Paciente } from '../../../interfaces/app.interface';
+import { AuthService } from '../../../servicios/auth.service';
+import { EstadoTurno, Rol } from '../../../enums/enums';
+import { Router } from '@angular/router';
 
 interface Especialista {
   nombreCompleto: string;
@@ -24,14 +27,28 @@ export class SolicitarTurnoComponent {
   especialistaSeleccionadoEmail: string = '';
   fechasDisponibles: Disponibilidad[] = [];
   disponibilidadSeleccionada: Disponibilidad | null = null;
+  turnoSeleccionado: string = '';
+  emailPaciente!: string;
+  isAdmin: boolean = false;
+  pacientesDisponibles!: Paciente[];
+  horaInicioSeleccionada!: string;
+  horaFinSeleccionada!: string;
 
-
-  constructor(private alert: AlertService, private firestore: Firestore) { }
+  constructor(private alert: AlertService, private firestore: Firestore, private auth: AuthService, private router: Router) { }
 
   handleDateSelected(selectedDate: string) {
     this.fechaSeleccionada = selectedDate;
-    // Buscar la disponibilidad correspondiente a la fecha seleccionada
     this.disponibilidadSeleccionada = this.fechasDisponibles.find(d => d.fecha === selectedDate) || null;
+  }
+
+  handleAppointmentSelected(turnoSeleccionado: string) {
+    const regex = /De (\d{1,2}:\d{2}) hs a (\d{1,2}:\d{2}) hs/;
+    const match = turnoSeleccionado.match(regex);
+
+    if (match) {
+      this.horaInicioSeleccionada = match[1];
+      this.horaFinSeleccionada = match[2];
+    }
   }
 
   ngOnInit(): void {
@@ -41,14 +58,27 @@ export class SolicitarTurnoComponent {
     });
 
     this.buscarEspecialidadesDisponibles();
-    console.log(this.especialistasDisponibles)
-  }
+    const emailUsuarioLogueado = this.auth.obtenerUsuarioLogueado();
 
-  // buscarEspecialidadesDisponibles()
-  // {
-  //   buscar todas las especialidades guardadas en el campo 'especialidades' de los documentos que tengan rol
-  //   "Medico" en la coleccion 'usuarios' y guardarlas a modo DISTINCT en this.especialidadesDisponibles, para que no se repitan
-  // }
+    if (emailUsuarioLogueado) {
+      this.auth.getUserRole(emailUsuarioLogueado).then(rolUsuarioLogueado => {
+        if (rolUsuarioLogueado === Rol.Admin) {
+          this.isAdmin = true;
+          this.buscarPacientesDisponibles();
+          this.form.addControl('paciente', new FormControl('', Validators.required));
+          this.form.get('paciente')?.valueChanges.subscribe((email) => {
+            this.emailPaciente = email;
+          });
+        }
+
+        if (rolUsuarioLogueado === Rol.Paciente) {
+          this.emailPaciente = emailUsuarioLogueado;
+        }
+      });
+    }
+
+    console.log(this.especialistasDisponibles);
+  }
 
   async buscarEspecialidadesDisponibles() {
     const especialidadesSet = new Set<string>();
@@ -59,7 +89,7 @@ export class SolicitarTurnoComponent {
       const snapshot = await getDocs(q);
 
       snapshot.forEach((doc) => {
-        const data = doc.data() as { especialidades?: string[] }; // Tipado para mejorar la seguridad
+        const data = doc.data() as { especialidades?: string[] }; 
         const especialidades = data.especialidades || [];
 
         if (Array.isArray(especialidades)) {
@@ -74,50 +104,38 @@ export class SolicitarTurnoComponent {
     }
   }
 
-  // buscarEspecialistasDisponibles()
-  // {
-  //   buscar todos los especialistas en la coleccion 'usuarios' que en los valores del campo 'especialidades' 
-  //   contengan la especialidad seleccionada y quedarme con una concatenacion de los campos 'nombre' y 'apellido'.
-  //   Guardar los resultados en especialistasDisponibles
-  // }
+  async buscarPacientesDisponibles() {
+    const pacientesSet = new Set<Paciente>();
 
-  // async buscarEspecialistasDisponibles() {
-  //   const especialidadSeleccionada = this.form.get('especialidad')?.value;
-  //   this.especialistasDisponibles = []; // Limpiar antes de cargar nuevos datos
+    try {
+      const usuariosRef = collection(this.firestore, 'usuarios');
+      const q = query(usuariosRef, where('rol', '==', 'Paciente'));
+      const snapshot = await getDocs(q);
 
-  //   if (!especialidadSeleccionada) return;
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const paciente: Paciente = {
+          email: data['email'],
+          nombre: `${data['nombre']} ${data['apellido']}`,
+          documento: data['documento']
+        };
 
-  //   const especialistas: string[] = [];
+        pacientesSet.add(paciente)
+      });
 
-  //   try {
-  //     const usuariosRef = collection(this.firestore, 'usuarios');
-  //     const q = query(
-  //       usuariosRef,
-  //       where('rol', '==', 'Medico'),
-  //       where('especialidades', 'array-contains', especialidadSeleccionada)
-  //     );
-  //     const snapshot = await getDocs(q);
-
-  //     snapshot.forEach((doc) => {
-  //       const data = doc.data() as { nombre: string; apellido: string };
-  //       const nombreCompleto = `${data.nombre} ${data.apellido}`;
-  //       especialistas.push(nombreCompleto);
-  //     });
-
-  //     this.especialistasDisponibles = especialistas;
-  //   } catch (error) {
-  //     console.error("Error al obtener especialistas: ", error);
-  //     this.alert.mostrarError("Error al obtener especialistas");
-  //   }
-  // }
+      this.pacientesDisponibles = Array.from(pacientesSet);
+    } catch (error) {
+      this.alert.mostrarError("Error al obtener pacientes");
+    }
+  }
 
   async buscarEspecialistasDisponibles() {
     const especialidadSeleccionada = this.form.get('especialidad')?.value;
-    this.especialistasDisponibles = []; // Limpiar antes de cargar nuevos datos
+    this.especialistasDisponibles = []; 
 
     if (!especialidadSeleccionada) return;
 
-    const especialistas: Especialista[] = []; // Array de objetos de tipo Especialista
+    const especialistas: Especialista[] = []; 
 
     try {
       const usuariosRef = collection(this.firestore, 'usuarios');
@@ -148,7 +166,6 @@ export class SolicitarTurnoComponent {
     if (this.form.valid) {
       this.isLoading = true;
 
-      // Setea el email del especialista seleccionado
       const especialistaSeleccionado = this.form.get('especialista')?.value;
       const especialista = this.especialistasDisponibles.find(e => e.email === especialistaSeleccionado);
       this.especialistaSeleccionadoEmail = especialista ? especialista.email : '';
@@ -189,7 +206,6 @@ export class SolicitarTurnoComponent {
         const disponibilidadData = disponibilidadSnap.data() as Record<string, any>;
         const disponibilidadEspecialidad = disponibilidadData[especialidadSeleccionada] || {};
 
-        // Guardar la información en `fechasDisponibles`
         this.fechasDisponibles = Object.entries(disponibilidadEspecialidad)
           .filter(([fecha, horario]: [string, any]) => {
             const [day, month, year] = fecha.split('-').map(Number);
@@ -198,6 +214,7 @@ export class SolicitarTurnoComponent {
             return fechaTurno >= fechaActual && fechaTurno <= fechaLimite;
           })
           .map(([fecha, horario]: [string, any]) => ({
+            especialista: especialistaSeleccionado,
             especialidad: especialidadSeleccionada,
             fecha: fecha,
             horaInicio: horario.horaInicio,
@@ -215,12 +232,92 @@ export class SolicitarTurnoComponent {
     }
   }
 
+  isFormValid(): boolean {
+    console.log(this.emailPaciente)
+    console.log(this.especialistaSeleccionadoEmail)
+    console.log(this.form.get('especialidad')?.value)
+    console.log(this.fechaSeleccionada)
+    console.log(this.horaInicioSeleccionada)
+    console.log(this.horaFinSeleccionada)
+    
+    return !!(
+      this.emailPaciente &&
+      this.especialistaSeleccionadoEmail &&
+      this.form.get('especialidad')?.value &&
+      this.fechaSeleccionada &&
+      this.horaInicioSeleccionada &&
+      this.horaFinSeleccionada
+    );
+  }
+
+  async onSolicitarTurno() {
+    if (!this.isFormValid()) {
+      console.log("Formulario inválido, faltan campos requeridos.");
+      return;
+    }
+
+    try {
+      this.isLoading = true;
+
+      console.log("Iniciando solicitud de turno...");
+
+      const turnosRef = collection(this.firestore, 'turnos');
+
+      const fechaSolo = this.fechaSeleccionada.includes('T')
+        ? this.fechaSeleccionada.split('T')[0]
+        : this.fechaSeleccionada;
+
+      console.log("Valor de fechaSolo (debe ser solo la fecha):", fechaSolo);
+
+      const q = query(
+        turnosRef,
+        where('fecha', '==', fechaSolo),
+        where('paciente', '==', this.emailPaciente),
+        where('especialidad', '==', this.form.get('especialidad')?.value)
+      );
+
+      const snapshot = await getDocs(q);
+
+      if (!snapshot.empty) {
+        this.alert.mostrarError("Solo es posible reservar un turno por día para esta especialidad");
+        return;
+      }
+
+      const turnoData = {
+        medico: this.especialistaSeleccionadoEmail,
+        fecha: fechaSolo,
+        horario: `${this.horaInicioSeleccionada} - ${this.horaFinSeleccionada}`,
+        paciente: this.emailPaciente,
+        especialidad: this.form.get('especialidad')?.value,
+        estado: EstadoTurno.Pendiente,
+        fechaSolicitud: new Date()
+      };
+
+      await addDoc(turnosRef, turnoData);
+
+      console.log("Turno solicitado exitosamente.");
+      this.alert.mostrarSuccess("Turno solicitado exitosamente");
+      setTimeout(() => {
+        this.router.navigate(['/home']);
+      }, 1500);
+    } catch (error) {
+      console.error("Error al solicitar turno:", error);
+      this.alert.mostrarError("Error al solicitar turno");
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
   get especialidad() {
     return this.form.get('especialidad');
   }
 
   get especialista() {
     return this.form.get('especialista');
+  }
+
+  get paciente() {
+    return this.form.get('paciente');
   }
 
   get fechasDisponiblesStrings(): string[] {

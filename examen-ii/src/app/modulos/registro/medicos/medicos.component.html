@@ -13,7 +13,6 @@
 
             <div class="inputs">
                 <div class="inputs-izq">
-                    <!-- Nombre -->
                     <div class="form-group">
                         <label for="nombre">Nombre:</label>
                         <input type="text" id="nombre" formControlName="nombre" placeholder="Ingresa tu nombre" />
@@ -25,7 +24,6 @@
                         </div>
                     </div>
 
-                    <!-- Apellido -->
                     <div class="form-group">
                         <label for="apellido">Apellido:</label>
                         <input type="text" id="apellido" formControlName="apellido" placeholder="Ingresa tu apellido" />
@@ -37,7 +35,6 @@
                         </div>
                     </div>
 
-                    <!-- Edad -->
                     <div class="form-group">
                         <label for="edad">Edad:</label>
                         <input type="number" id="edad" formControlName="edad"
@@ -53,7 +50,6 @@
                         </div>
                     </div>
 
-                    <!-- Desplegable de Especialidades -->
                     <div class="form-group">
                         <label for="inputState">Especialidad</label>
                         <select id="inputState" (change)="onEspecialidadChange($event)">
@@ -65,7 +61,6 @@
                         </select>
                     </div>
 
-                    <!-- Input para ingresar la otra especialidad -->
                     <div class="form-group" *ngIf="especialidadActual === 'otra'">
                         <label for="otraEspecialidad">Especifica tu especialidad</label>
                         <input type="text" id="otraEspecialidad" formControlName="otraEspecialidad"
@@ -76,22 +71,25 @@
                         </div>
                     </div>
 
-                    <!-- Lista de Especialidades Seleccionadas -->
                     <div *ngIf="especialidadesFiltradas.length > 0">
                         <h3 style="margin-bottom: 10px;">Especialidades Seleccionadas:</h3>
                         <ul>
-                          <li *ngFor="let especialidad of especialidadesFiltradas; let i = index">
-                            {{ especialidad }}
-                            <button type="button" (click)="eliminarEspecialidad(i)" style="margin-left: 10px; color: red; cursor: pointer; border: none; background: none;">
-                              ✖
-                            </button>
-                          </li>
+                            <li *ngFor="let especialidad of especialidadesFiltradas; let i = index">
+                                {{ especialidad }}
+                                <button type="button" (click)="eliminarEspecialidad(i)"
+                                    style="margin-left: 10px; color: red; cursor: pointer; border: none; background: none;">
+                                    ✖
+                                </button>
+                            </li>
                         </ul>
-                      </div>
+                    </div>
+
+                    <re-captcha (resolved)="onCaptchaResolved($event)"
+                        siteKey="6Lc4VnQqAAAAACuZC-R8Yco-rqXSdMiHn30qaZFD" theme="dark">
+                    </re-captcha>
                 </div>
 
                 <div class="inputs-der">
-                    <!-- Documento -->
                     <div class="form-group">
                         <label for="documento">Número de Documento:</label>
                         <input type="text" id="documento" formControlName="documento"
@@ -114,7 +112,6 @@
                         </div>
                     </div>
 
-                    <!-- Email -->
                     <div class="form-group">
                         <label for="email">Email:</label>
                         <input type="email" id="email" formControlName="email" placeholder="Ingresa tu email" />
@@ -126,7 +123,6 @@
                         </div>
                     </div>
 
-                    <!-- Contraseña -->
                     <div class="form-group">
                         <label for="password">Contraseña:</label>
                         <input type="password" id="password" formControlName="password"
@@ -140,7 +136,6 @@
                         </div>
                     </div>
 
-                    <!-- Imágen -->
                     <div class="form-group">
                         <label for="imagen1">Imagen de Perfil:</label>
                         <input type="file" id="imagen1" formControlName="imagen1"
@@ -152,8 +147,7 @@
                 </div>
             </div>
 
-            <!-- Botón de envío -->
-            <button type="submit" [disabled]="formulario.invalid">
+            <button type="submit" [disabled]="formulario.invalid || !captchaValido">
                 Enviar
             </button>
         </form>

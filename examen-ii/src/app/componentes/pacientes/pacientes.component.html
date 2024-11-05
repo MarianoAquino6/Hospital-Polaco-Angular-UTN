@@ -1,0 +1,36 @@
+<app-loading [isLoading]="isLoading"></app-loading>
+
+<section>
+    <div class="banner">
+        <h2>PACIENTES</h2>
+    </div>
+</section>
+
+<section class="pacientes">
+    <div class="tabla">
+        <div class="tabla-scroll">
+            <table>
+                <tr>
+                    <th>Email</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Documento</th>
+                    <th>Obra Social</th>
+                    <th>Edad</th>
+                    <th>Historia Clinica</th>
+                </tr>
+                <tr *ngFor="let objeto of objetos">
+                    <td>{{ objeto.email }}</td>
+                    <td>{{ objeto.nombre }}</td>
+                    <td>{{ objeto.apellido }}</td>
+                    <td>{{ objeto.documento }}</td>
+                    <td>{{ objeto.obraSocial }}</td>
+                    <td>{{ objeto.edad }}</td>
+                    <td class="cancel-icon-cell">
+                        <i class="fas fa-notes-medical" aria-hidden="true" (click)="verHistoriaClinica(objeto.email)"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,91 @@
+<app-loading [isLoading]="isLoading"></app-loading>
+
+<section>
+    <div class="banner">
+        <h2>MIS TURNOS</h2>
+    </div>
+</section>
+
+<section class="turnos">
+    <div class="busqueda">
+        <input type="text" placeholder="Buscar según medico o especialidad..." [(ngModel)]="searchText" />
+    </div>
+
+    <div class="tabla">
+        <div class="tabla-scroll">
+            <table>
+                <tr>
+                    <th>Medico</th>
+                    <th>Fecha</th>
+                    <th>Horario</th>
+                    <th>Especialidad</th>
+                    <th>Paciente</th>
+                    <th>Estado</th>
+                    <th>Cancelar</th> 
+                    <th>Ver Reseña</th> 
+                    <th>Completar Encuesta</th> 
+                    <th>Calificar Atencion</th> 
+                </tr>
+                <tr *ngFor="let turno of turnosDisponibles | filtroGenerico: searchText : [
+                        'medicoNombreCompleto', 'especialidad', 'fecha', 'horario', 'estado', 'altura', 
+                        'peso', 'temperatura', 'presion', 'datosDinamicos'
+                        ]">
+                    <td>{{ turno.medicoNombreCompleto }}</td>
+                    <td>{{ turno.fecha }}</td>
+                    <td>{{ turno.horario }}</td>
+                    <td>{{ turno.especialidad }}</td>
+                    <td>{{ turno.pacienteNombreCompleto }}</td>
+                    <td>{{ turno.estado }}</td>
+
+                    @if(turno.estado == "Cancelado") {
+                    <td class="inhabilitado">Ya cancelado</td>
+                    }
+                    @else if (turno.estado == "Pendiente" || turno.estado == "Aceptado") {
+                    <td class="cancel-icon-cell">
+                        <i class="fa fa-times" aria-hidden="true" (click)="cancelarTurno(turno)"></i>
+                    </td>
+                    }
+                    @else {
+                    <td class="inhabilitado">No disponible</td>
+                    }
+
+                    @if (turno.resenia) {
+                    <td class="cancel-icon-cell">
+                        <i class="fa fa-comment" aria-hidden="true" (click)="leerResenia(turno)"></i>
+                    </td>
+                    }
+                    @else {
+                    <td class="inhabilitado">No disponible</td>
+                    }
+
+                    @if(turno.encuesta)
+                    {
+                    <td class="inhabilitado">Ya completada</td>
+                    }
+                    @else if (turno.estado == "Finalizado" && turno.resenia) {
+                    <td class="cancel-icon-cell">
+                        <i class="fa fa-list-alt" aria-hidden="true" (click)="completarEncuesta(turno)"></i>
+                    </td>
+                    }
+                    @else {
+                    <td class="inhabilitado">No disponible</td>
+                    }
+
+                    @if(turno.calificacion)
+                    {
+                    <td class="inhabilitado">Ya calificado</td>
+                    }
+                    @else if (turno.estado == "Finalizado") {
+                    <td class="cancel-icon-cell">
+                        <i class="fa fa-star" aria-hidden="true" (click)="calificarAtencion(turno)"></i>
+                    </td>
+                    }
+                    @else {
+                    <td class="inhabilitado">No disponible</td>
+                    }
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</section>

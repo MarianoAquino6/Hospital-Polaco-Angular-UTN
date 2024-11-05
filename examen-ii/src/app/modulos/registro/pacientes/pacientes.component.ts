@@ -1,25 +1,22 @@
 import { Component } from '@angular/core';
 import { addDoc, collection, Firestore, getDocs, query, where } from '@angular/fire/firestore';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ReactiveFormsModule, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
-import { AlertService } from '../../servicios/alert.service';
-import { CommonModule } from '@angular/common';
+import { AlertService } from '../../../servicios/alert.service';
 import { getDownloadURL, getStorage, ref, uploadBytes } from '@angular/fire/storage';
-import { Rol } from '../../enums/enums';
+import { Rol } from '../../../enums/enums';
 import { getAuth } from '@angular/fire/auth';
 import { createUserWithEmailAndPassword, sendEmailVerification } from '@firebase/auth';
-import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
-  selector: 'app-registro-paciente',
-  standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, LoadingComponent],
-  templateUrl: './registro-paciente.component.html',
-  styleUrl: './registro-paciente.component.css'
+  selector: 'app-pacientes',
+  templateUrl: './pacientes.component.html',
+  styleUrl: './pacientes.component.css'
 })
-export class RegistroPacienteComponent {
+export class PacientesComponent {
   formulario!: FormGroup;
   isLoading = false;
+  captchaValido: boolean = false;
 
   constructor(private firestore: Firestore, private router: Router, private alert: AlertService) { }
 
@@ -43,7 +40,7 @@ export class RegistroPacienteComponent {
   }
 
   async onSubmit(): Promise<void> {
-    if (this.formulario.valid) {
+    if (this.formulario.valid && this.captchaValido) {
       this.isLoading = true;
       try {
         const urls = await this.uploadImages();
@@ -98,6 +95,7 @@ export class RegistroPacienteComponent {
         imagen1: urls[0],
         imagen2: urls[1],
         rol: Rol.Paciente,
+        habilitado: true,
         fechaCreacion: new Date()
       };
 
@@ -128,17 +126,25 @@ export class RegistroPacienteComponent {
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
 
-      // Verificar que sea una imagen
       if (file.type.startsWith('image/')) {
-        this.formulario.get(imageField)?.setValue(file); // Almacena el archivo en el FormControl
+        this.formulario.get(imageField)?.setValue(file);
       } else {
         this.alert.mostrarError('El archivo debe ser una imagen.');
-        input.value = ''; // Resetea el input
+        input.value = '';
       }
     }
   }
 
-  // Modificar getters y setters
+  onCaptchaResolved(captchaResponse: string | null) {
+    if (captchaResponse) {
+      console.log('Captcha resuelto:', captchaResponse);
+      this.captchaValido = true;
+    } else {
+      console.log('Captcha no resuelto o inválido.');
+      this.captchaValido = false;
+    }
+  }
+
   get nombre() {
     return this.formulario.get('nombre');
   }

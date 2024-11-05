@@ -1,28 +1,25 @@
-import { createUserWithEmailAndPassword } from '@firebase/auth';
 import { Component } from '@angular/core';
 import { addDoc, collection, Firestore, getDocs, query, where } from '@angular/fire/firestore';
-import { FormControl, FormGroup, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertService } from '../../servicios/alert.service';
+import { AlertService } from '../../../servicios/alert.service';
 import { getDownloadURL, getStorage, ref, uploadBytes } from '@angular/fire/storage';
-import { CommonModule } from '@angular/common';
-import { Rol } from '../../enums/enums';
-import { getAuth, sendEmailVerification } from '@angular/fire/auth';
-import { LoadingComponent } from '../loading/loading.component';
+import { Rol } from '../../../enums/enums';
+import { getAuth } from '@angular/fire/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from '@firebase/auth';
 
 @Component({
-  selector: 'app-registro-medico',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LoadingComponent],
-  templateUrl: './registro-medico.component.html',
-  styleUrl: './registro-medico.component.css'
+  selector: 'app-medicos',
+  templateUrl: './medicos.component.html',
+  styleUrl: './medicos.component.css'
 })
-export class RegistroMedicoComponent {
+export class MedicosComponent {
   formulario!: FormGroup;
   isLoading = false;
   especialidades: string[] = ['Cardiología', 'Dermatología', 'Pediatría', 'Neurología'];
   especialidadesSeleccionadas: string[] = [];
-  especialidadActual: string = ''; // Nueva propiedad para la selección actual
+  especialidadActual: string = ''; 
+  captchaValido: boolean = false;
 
   constructor(private firestore: Firestore, private router: Router, private alert: AlertService) { }
 
@@ -47,7 +44,7 @@ export class RegistroMedicoComponent {
   }
 
   async onSubmit(): Promise<void> {
-    if (this.formulario.valid) {
+    if (this.formulario.valid && this.captchaValido) {
       this.isLoading = true;
       try {
         const urls = await this.uploadImages();
@@ -65,15 +62,14 @@ export class RegistroMedicoComponent {
   onEspecialidadChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedValue = selectElement.value;
-    this.especialidadActual = selectedValue; // Guardamos la especialidad seleccionada
-  
-    // Actualiza el FormControl de especialidad con el valor seleccionado
+    this.especialidadActual = selectedValue; 
+
     this.formulario.get('especialidad')?.setValue(selectedValue);
-  
+
     if (selectedValue !== 'otra' && !this.especialidadesSeleccionadas.includes(selectedValue)) {
       this.especialidadesSeleccionadas.push(selectedValue);
     }
-  
+
     this.formulario.get('otraEspecialidad')?.updateValueAndValidity();
   }
 
@@ -98,7 +94,7 @@ export class RegistroMedicoComponent {
         this.formulario.get(imageField)?.setValue(file);
       } else {
         this.alert.mostrarError('El archivo debe ser una imagen.');
-        input.value = ''; // Resetea el input
+        input.value = ''; 
       }
     }
   }
@@ -109,7 +105,7 @@ export class RegistroMedicoComponent {
 
     const file = this.formulario.get('imagen1')?.value;
     if (file) {
-      const storageRef = ref(storage, 'imagenes/medicos/${file.name}');
+      const storageRef = ref(storage, `imagenes/medicos/${file.name}`);
       await uploadBytes(storageRef, file);
       const url = await getDownloadURL(storageRef);
       imageUrls.push(url);
@@ -138,7 +134,8 @@ export class RegistroMedicoComponent {
         email: email,
         imagen1: urls[0],
         rol: Rol.Medico,
-        aceptado: false,
+        aceptado: false, 
+        habilitado: true, 
         fechaCreacion: new Date()
       };
 
@@ -165,7 +162,16 @@ export class RegistroMedicoComponent {
     return !querySnapshot.empty;
   }
 
-  // Modificar getters y setters
+  onCaptchaResolved(captchaResponse: string | null) {
+    if (captchaResponse) {
+      console.log('Captcha resuelto:', captchaResponse);
+      this.captchaValido = true;
+    } else {
+      console.log('Captcha no resuelto o inválido.');
+      this.captchaValido = false;
+    }
+  }
+
   get nombre() {
     return this.formulario.get('nombre');
   }

@@ -1,0 +1,67 @@
+<app-loading [isLoading]="isLoading"></app-loading>
+
+<section>
+    <div class="banner">
+        <h2>HISTORIA CLINICA</h2>
+    </div>
+</section>
+
+<section>
+    <div *ngIf="isMedico">
+        <form (ngSubmit)="guardarHistoriaClinica()" class="historia-clinica">
+            <div class="izq">
+                <label>Altura</label>
+                <input type="number" name="altura" placeholder="Altura" [(ngModel)]="historiaClinica.altura" required>
+                <label>Peso</label>
+                <input type="number" name="peso" placeholder="Peso" [(ngModel)]="historiaClinica.peso" required>
+                <label>Temperatura</label>
+                <input type="number" name="temperatura" placeholder="Temperatura"
+                    [(ngModel)]="historiaClinica.temperatura" required>
+                <label>Presión</label>
+                <input type="text" name="presion" placeholder="Presión" [(ngModel)]="historiaClinica.presion" required>
+            </div>
+            <div class="der">
+                <div *ngFor="let dato of historiaClinica.datosDinamicos; let i = index" class="par">
+                    <label for="nuevo">Nuevo dato {{i+1}}</label>
+                    <input type="text" name="clave{{i}}" placeholder="Clave" [(ngModel)]="dato.clave" required>
+                    <input type="text" name="valor{{i}}" placeholder="Valor" [(ngModel)]="dato.valor" required>
+                </div>
+
+                <button type="button" (click)="agregarDatoDinamico()"
+                    [disabled]="historiaClinica.datosDinamicos.length >= maxDatosDinamicos">Agregar dato</button>
+                <button type="submit">Guardar</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="isPaciente || isAdmin">
+        <div class="historia-clinica">
+            <div class="izq">
+                <ul>
+                    <li>
+                        <span class="label">Altura:</span> {{ historiaClinica.altura }}
+                    </li>
+                    <li>
+                        <span class="label">Peso:</span> {{ historiaClinica.peso }}
+                    </li>
+                    <li>
+                        <span class="label">Temperatura:</span> {{ historiaClinica.temperatura }}
+                    </li>
+                    <li>
+                        <span class="label">Presión:</span> {{ historiaClinica.presion }}
+                    </li>
+                </ul>
+            </div>
+
+            <div class="der">
+                <ul>
+                    <div *ngFor="let dato of historiaClinica.datosDinamicos">
+                        <li>
+                            <span class="label">{{ dato.clave }}:</span> {{ dato.valor }}
+                        </li>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>

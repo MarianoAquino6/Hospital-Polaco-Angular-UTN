@@ -49,3 +49,42 @@ tr:hover td {
 tr:hover i.fa {
     color: #777;
 }
+
+.verde button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.verde button:hover {
+    background-color: #218838;
+}
+
+.rojo button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.rojo button:hover {
+    background-color: #c82333;
+}
+
+i.fa-notes-medical {
+    color: yellow;
+}
+
+i:hover {
+    transition: color 0.3s ease, transform 0.3s ease;
+    transform: scale(1.8);
+}

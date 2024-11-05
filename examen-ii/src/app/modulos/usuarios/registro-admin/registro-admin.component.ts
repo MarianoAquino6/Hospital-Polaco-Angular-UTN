@@ -16,6 +16,7 @@ import { createUserWithEmailAndPassword, sendEmailVerification } from '@firebase
 export class RegistroAdminComponent {
   formulario!: FormGroup;
   isLoading = false;
+  captchaValido: boolean = false;
 
   constructor(private firestore: Firestore, private router: Router, private alert: AlertService) { }
 
@@ -37,7 +38,7 @@ export class RegistroAdminComponent {
   }
 
   async onSubmit(): Promise<void> {
-    if (this.formulario.valid) {
+    if (this.formulario.valid && this.captchaValido) {
       this.isLoading = true;
       try {
         const urls = await this.uploadImages();
@@ -57,12 +58,11 @@ export class RegistroAdminComponent {
     if (input.files && input.files[0]) {
       const file = input.files[0];
 
-      // Verificar que sea una imagen
       if (file.type.startsWith('image/')) {
         this.formulario.get(imageField)?.setValue(file);
       } else {
         this.alert.mostrarError('El archivo debe ser una imagen.');
-        input.value = ''; // Resetea el input
+        input.value = '';
       }
     }
   }
@@ -101,6 +101,7 @@ export class RegistroAdminComponent {
         email: this.formulario.get('email')?.value,
         imagen1: urls[0],
         rol: Rol.Admin,
+        habilitado: true,
         fechaCreacion: new Date()
       };
 
@@ -126,7 +127,16 @@ export class RegistroAdminComponent {
     return !querySnapshot.empty;
   }
 
-  // Modificar getters y setters
+  onCaptchaResolved(captchaResponse: string | null) {
+    if (captchaResponse) {
+      console.log('Captcha resuelto:', captchaResponse);
+      this.captchaValido = true;
+    } else {
+      console.log('Captcha no resuelto o inválido.');
+      this.captchaValido = false;
+    }
+  }
+
   get nombre() {
     return this.formulario.get('nombre');
   }

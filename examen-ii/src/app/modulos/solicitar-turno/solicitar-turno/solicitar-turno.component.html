@@ -1,3 +1,5 @@
+<app-loading [isLoading]="isLoading"></app-loading>
+
 <section>
     <div class="banner">
         <h2>SOLICITAR TURNOS</h2>
@@ -9,8 +11,22 @@
         <h3> FILTROS </h3>
 
         <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            @if(isAdmin)
+            {
+                <label for="paciente">Paciente</label>
+                <select formControlName="paciente">
+                    <option value="" disabled selected>Elige...</option>
+                    <option *ngFor="let paciente of pacientesDisponibles" [value]="paciente.email">
+                        {{ paciente.nombre }}
+                    </option>
+                </select>
 
-            <!-- Especialidad -->
+                <div *ngIf="paciente?.hasError('required') && paciente?.touched">
+                    <small class="error">Este campo es obligatorio.</small>
+                </div>
+                
+            }
+
             <label for="especialidad">Especialidad</label>
             <select formControlName="especialidad" (change)="buscarEspecialistasDisponibles()">
                 <option value="" disabled selected>Elige...</option>
@@ -28,10 +44,10 @@
             {
                 <label for="especialista">Especialista</label>
                 <select formControlName="especialista">
-                <option value="" disabled selected>Elige...</option>
-                <option *ngFor="let especialista of especialistasDisponibles" [value]="especialista.email">
-                    {{ especialista.nombreCompleto }}
-                </option>
+                    <option value="" disabled selected>Elige...</option>
+                    <option *ngFor="let especialista of especialistasDisponibles" [value]="especialista.email">
+                        {{ especialista.nombreCompleto }}
+                    </option>
                 </select>
 
                 <div *ngIf="especialista?.hasError('required') && especialista?.touched">
@@ -43,7 +59,6 @@
                 <small class="error">Seleccionar especialidad.</small>
             }
 
-            <!-- Botón de envío -->
             <button type="submit" [disabled]="form.invalid">
                 Aplicar
             </button>
@@ -56,12 +71,8 @@
 
             @if(mostrarCalendario)
             {
-                <app-calendario
-                [fechasDisponibles]="fechasDisponiblesStrings"
-                (dateSelected)="handleDateSelected($event)">
+            <app-calendario [fechasDisponibles]="fechasDisponiblesStrings" (dateSelected)="handleDateSelected($event)">
             </app-calendario>
-
-            <!-- <app-calendario [fechasDisponibles]="['31-10-2024', '01-11-2024', '03-11-2024']" (dateSelected)="handleDateSelected($event)" ></app-calendario> -->
             }
             @else
             {
@@ -74,14 +85,20 @@
         <div class="horarios">
             <h3> Seleccione un horario </h3>
 
-            @if (fechaSeleccionada != '') 
+            @if (fechaSeleccionada != '')
             {
-                <app-horarios-disponibles [disponibilidad]="disponibilidadSeleccionada"></app-horarios-disponibles>
+            <app-horarios-disponibles [disponibilidad]="disponibilidadSeleccionada"
+                (turnoSeleccionado)="handleAppointmentSelected($event)">
+            </app-horarios-disponibles>
             }
-            @else 
+            @else
             {
-                <p>Para elegir un horario primero deberás elegir una fecha</p>
+            <p>Para elegir un horario primero deberás elegir una fecha</p>
             }
+
+            <button type="submit" [disabled]="!isFormValid()" (click)="onSolicitarTurno()">
+                Solicitar
+            </button>
         </div>
     </div>
 </section>

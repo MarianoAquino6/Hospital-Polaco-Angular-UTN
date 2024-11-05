@@ -6,6 +6,7 @@ import { SolicitarTurnoComponent } from './solicitar-turno/solicitar-turno.compo
 import { HorariosDisponiblesComponent } from './horarios-disponibles/horarios-disponibles.component';
 import { CalendarioComponent } from '../../componentes/calendario/calendario.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { LoadingComponent } from '../../componentes/loading/loading.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     SolicitarTurnoRoutingModule,
     CalendarioComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    LoadingComponent
   ]
 })
 export class SolicitarTurnoModule { }

@@ -8,6 +8,7 @@ import { RegistroAdminComponent } from './registro-admin/registro-admin.componen
 import { ReactiveFormsModule } from '@angular/forms';
 import { TablaUsuariosComponent } from './tabla-usuarios/tabla-usuarios.component';
 import { LoadingComponent } from '../../componentes/loading/loading.component';
+import { RecaptchaModule } from 'ng-recaptcha-2';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { LoadingComponent } from '../../componentes/loading/loading.component';
     CommonModule,
     UsuariosRoutingModule,
     ReactiveFormsModule,
-    LoadingComponent
+    LoadingComponent,
+    RecaptchaModule
   ]
 })
 export class UsuariosModule { }

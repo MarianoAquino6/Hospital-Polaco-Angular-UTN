@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Firestore } from '@angular/fire/firestore';
+import { addDoc, collection, Firestore } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { AlertService } from '../../servicios/alert.service';
 import { Auth, signInWithEmailAndPassword } from '@angular/fire/auth';
@@ -30,19 +30,29 @@ export class LoginComponent {
 
   }
 
-  autocompletarPaciente() {
-    this.usernameLogin = "pacientehosplaboiv@outlook.com";
-    this.passLogin = "123456Paciente";
+  autocompletarPaciente1() {
+    this.usernameLogin = "xejafes529@acroins.com";
+    this.passLogin = "123456";
   }
-
-  autocompletarMedico() {
-    this.usernameLogin = "medicohosplaboivv@outlook.com";
-    this.passLogin = "123456Medico";
+  autocompletarPaciente2() {
+    this.usernameLogin = "jebivix505@acroins.com";
+    this.passLogin = "123456";
   }
-
+  autocompletarPaciente3() {
+    this.usernameLogin = "yojew10349@edectus.com";
+    this.passLogin = "123456";
+  }
+  autocompletarMedico1() {
+    this.usernameLogin = "pidek10164@aqqor.com";
+    this.passLogin = "123456";
+  }
+  autocompletarMedico2() {
+    this.usernameLogin = "telep63719@aleitar.com";
+    this.passLogin = "123456";
+  }
   autocompletarAdmin() {
-    this.usernameLogin = "admnhosplaboiv@outlook.com";
-    this.passLogin = "123456Admin";
+    this.usernameLogin = "ramey54405@aqqor.com";
+    this.passLogin = "123456";
   }
 
   async login() {
@@ -64,6 +74,13 @@ export class LoginComponent {
         }
       }
 
+      if (!await this.authService.usuarioEstaHabilitado(user.email || "")) {
+        this.alert.mostrarError('Su usuario ha sido deshabilitado');
+        return;
+      }
+
+      await this.dejarRegistroLog();
+
       this.alert.mostrarSuccess('Bienvenido');
       this.authService.setUsuarioLogueado(user.email || "");
 
@@ -72,15 +89,13 @@ export class LoginComponent {
       }, 1500);
 
     } catch (e) {
-      // Use type assertion to specify the error type
       const error = e as FirebaseError;
 
-      // Handle errors
       switch (error.code) {
         case "auth/invalid-email":
           this.mensajeError = "Email inválido";
           break;
-        case "auth/wrong-password":
+        case "auth/invalid-credential":
           this.mensajeError = "Credenciales incorrectas";
           break;
         case "auth/network-request-failed":
@@ -95,6 +110,20 @@ export class LoginComponent {
     }
     finally {
       this.isLoading = false;
+    }
+  }
+
+  async dejarRegistroLog() {
+    try {
+      const logData = {
+        usuario: this.usernameLogin,
+        fechaYHora: new Date(),
+      };
+
+      const logsCollection = collection(this.firestore, 'logs');
+      await addDoc(logsCollection, logData);
+    } catch (error) {
+      console.error('Error al guardar el registro de log:', error);
     }
   }
 }

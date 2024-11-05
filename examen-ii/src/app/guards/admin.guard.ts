@@ -5,18 +5,18 @@ import { Rol } from '../enums/enums';
 import { AlertService } from '../servicios/alert.service';
 
 export const adminGuard: CanActivateFn = async (route, state) => {
-  const authService = inject(AuthService); // Inyectar el AuthService
+  const authService = inject(AuthService); 
   const alert = inject(AlertService); 
 
-  const usuarioLogueado = authService.usuarioLogueado; // Obtener el valor actual del BehaviorSubject
+  const usuarioLogueado = authService.usuarioLogueado; 
 
   if (usuarioLogueado) {
-    const role = await authService.getUserRole(usuarioLogueado); // Obtener el rol del usuario
+    const role = await authService.getUserRole(usuarioLogueado); 
     if (role === Rol.Admin) {
-      return true; // Permitir el acceso si el rol es Admin
+      return true; 
     }
   }
 
   alert.mostrarError('Acceso denegado. Solo para administradores.'); 
-  return false; // Denegar el acceso
+  return false;
 };
