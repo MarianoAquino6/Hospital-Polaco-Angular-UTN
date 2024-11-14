@@ -70,4 +70,5 @@ export interface Turno {
     temperatura?: number | null; 
     presion?: string | null;
     datosDinamicos?: Array<{ clave: string; valor: string }>;
+    fechaSolicitud?: Date | null;
 }

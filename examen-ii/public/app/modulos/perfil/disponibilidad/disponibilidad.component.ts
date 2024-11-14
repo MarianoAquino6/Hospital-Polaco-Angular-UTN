@@ -1,8 +1,20 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Admin, Medico, Paciente } from '../../../interfaces/app.interface';
-import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { AlertService } from '../../../servicios/alert.service';
-import { doc, Firestore, getDoc, setDoc, updateDoc } from '@angular/fire/firestore';
+import { collection, doc, Firestore, getDoc, getDocs, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
+
+interface DisponibilidadDia {
+  horaInicio: string;
+  horaFin: string;
+}
+
+interface Disponibilidad {
+  [especialidad: string]: {
+    [dia: string]: DisponibilidadDia;
+  };
+}
 
 @Component({
   selector: 'app-disponibilidad',
@@ -14,100 +26,136 @@ export class DisponibilidadComponent implements OnInit {
   fechaSeleccionada: string = '';
   form!: FormGroup;
   isLoading = false;
-  horas: string[] = [];
+  disponibilidadCargada: { [dia: string]: DisponibilidadDia } | null = null;
+  modoLectura = true;
+  diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  horarios: string[][] = [];
 
-  constructor(private alert: AlertService, private firestore: Firestore) { }
+  constructor(private alert: AlertService, private firestore: Firestore, private router: Router) { }
 
   ngOnInit(): void {
     this.form = new FormGroup({
+      especialidad: new FormControl('', Validators.required),
       duracionTurnos: new FormControl(30, [
         Validators.required,
         Validators.min(30),
         Validators.max(60)
       ]),
-      horaInicio: new FormControl('', Validators.required),
-      horaFin: new FormControl('', Validators.required),
-      especialidad: new FormControl('', Validators.required)
-    },
-      { validators: this.horasValidator() });
+      diasDisponibles: new FormArray(
+        this.diasSemana.map(() =>
+          new FormGroup(
+            {
+              disponible: new FormControl(true),
+              horaInicio: new FormControl('', Validators.required),
+              horaFin: new FormControl('', Validators.required)
+            },
+            this.validarHorario
+          )
+        )
+      )
+    });
+
+    this.horarios = this.diasSemana.map((_, index) =>
+      index === 5
+        ? this.generarHorarios(8, 14)
+        : this.generarHorarios(8, 19)
+    );
+
+    this.form.get('especialidad')?.valueChanges.subscribe((especialidad) => {
+      if (especialidad) {
+        this.cargarDisponibilidad(especialidad);
+      }
+    });
   }
 
-  handleDateSelected(selectedDate: string) {
-    console.log('Recibi el dia:' + selectedDate)
-    this.fechaSeleccionada = selectedDate;
-    this.ajustarHorariosPorDia();
-  }
+  toggleDisponibilidad(index: number): void {
+    const diaControl = this.diasDisponibles.at(index) as FormGroup;
+    const disponible = diaControl.get('disponible')?.value;
 
-  ajustarHorariosPorDia() {
-    const fecha = this.convertirFecha(this.fechaSeleccionada);
-    if (!fecha) return;
-
-    const diaSemana = fecha.getDay();
-    this.generarHoras(diaSemana);
-
-    if (diaSemana === 0) { 
-      this.form.get('horaInicio')?.disable();
-      this.form.get('horaFin')?.disable();
+    if (disponible) {
+      diaControl.get('horaInicio')?.enable();
+      diaControl.get('horaFin')?.enable();
     } else {
-      this.form.get('horaInicio')?.enable();
-      this.form.get('horaFin')?.enable();
+      diaControl.get('horaInicio')?.disable();
+      diaControl.get('horaFin')?.disable();
     }
   }
 
-  generarHoras(diaSemana: number) {
-    console.log('Esta generando las horas')
-    this.horas = []; 
-    let horaInicioMin: string;
-    let horaFinMax: string;
-
-    if (diaSemana === 6) { 
-      horaInicioMin = '08:00';
-      horaFinMax = '14:00';
-    } else { 
-      horaInicioMin = '08:00';
-      horaFinMax = '19:00';
+  async cargarDisponibilidad(especialidad: string): Promise<void> {
+    if (!this.usuarioLogueadoEntidad || !this.usuarioLogueadoEntidad.email) {
+      this.alert.mostrarError('Usuario no logueado o email no disponible.');
+      return;
     }
 
-    for (let h = parseInt(horaInicioMin.split(':')[0]); h <= parseInt(horaFinMax.split(':')[0]); h++) {
-      for (let m = 0; m < 60; m += 10) { 
-        const hora = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+    try {
+      const usuariosRef = collection(this.firestore, 'usuarios');
+      const q = query(usuariosRef, where('email', '==', this.usuarioLogueadoEntidad.email));
+      const querySnapshot = await getDocs(q);
 
-        if (h === parseInt(horaFinMax.split(':')[0]) && m > parseInt(horaFinMax.split(':')[1])) {
-          break; 
-        }
+      if (querySnapshot.empty) {
+        this.alert.mostrarError('Usuario no encontrado en la base de datos.');
+        return;
+      }
 
-        if (h > parseInt(horaInicioMin.split(':')[0]) || (h === parseInt(horaInicioMin.split(':')[0]) && m >= parseInt(horaInicioMin.split(':')[1]))) {
-          this.horas.push(hora);
-        }
+      const usuarioDoc = querySnapshot.docs[0];
+      const usuarioData = usuarioDoc.data();
+      const disponibilidad: Disponibilidad = usuarioData['disponibilidad'] || {};
+
+      this.disponibilidadCargada = disponibilidad[especialidad] || null;
+      this.modoLectura = !!this.disponibilidadCargada; 
+
+      if (this.disponibilidadCargada) {
+        this.diasSemana.forEach((dia, index) => {
+          const diaControl = this.diasDisponibles.at(index) as FormGroup;
+          if (this.disponibilidadCargada![dia]) {
+            diaControl.get('disponible')?.setValue(true);
+            diaControl.get('horaInicio')?.setValue(this.disponibilidadCargada![dia].horaInicio || '');
+            diaControl.get('horaFin')?.setValue(this.disponibilidadCargada![dia].horaFin || '');
+          } else {
+            diaControl.get('disponible')?.setValue(false);
+            diaControl.get('horaInicio')?.reset();
+            diaControl.get('horaFin')?.reset();
+            diaControl.get('horaInicio')?.disable();
+            diaControl.get('horaFin')?.disable();
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Error al cargar la disponibilidad:', error);
+      this.alert.mostrarError('Error al cargar la disponibilidad.');
+    }
+  }
+
+  get diasDisponibles(): FormArray {
+    return this.form.get('diasDisponibles') as FormArray;
+  }
+
+  generarHorarios(horaInicio: number, horaFin: number): string[] {
+    const horarios = [];
+    for (let h = horaInicio; h <= horaFin; h++) { 
+      for (let m = 0; m < 60; m += 10) {
+        if (h === horaFin && m > 0) break; 
+        horarios.push(`${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`);
       }
     }
+    return horarios;
   }
 
-  convertirFecha(fechaString: string): Date | null {
-    const partes = fechaString.split('-');
-    if (partes.length !== 3) return null;
-
-    const [dia, mes, anio] = partes.map(Number);
-    return new Date(anio, mes - 1, dia); 
-  }
-
-  horasValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => {
-      const horaInicio = control.get('horaInicio')?.value;
-      const horaFin = control.get('horaFin')?.value;
-
-      return horaInicio && horaFin && horaFin <= horaInicio
-        ? { finMenorQueInicio: true }
-        : null;
-    };
-  }
+  validarHorario: ValidatorFn = (group: AbstractControl): { [key: string]: boolean } | null => {
+    const horaInicio = group.get('horaInicio')?.value;
+    const horaFin = group.get('horaFin')?.value;
+    if (horaInicio && horaFin && horaInicio >= horaFin) {
+      return { finMenorQueInicio: true };
+    }
+    return null;
+  };
 
   async onSubmit(): Promise<void> {
     console.log('se entro al on submit')
     if (this.form.valid) {
       this.isLoading = true;
       try {
-        await this.registrarRespuesta();
+        await this.registrarDisponibilidad();
       } catch (error) {
         this.alert.mostrarError('Error inesperado');
       } finally {
@@ -118,89 +166,121 @@ export class DisponibilidadComponent implements OnInit {
     }
   }
 
-  async registrarRespuesta() {
-    if (!this.usuarioLogueadoEntidad || !this.fechaSeleccionada) {
-      this.alert.mostrarError('Faltan datos necesarios para registrar la disponibilidad.');
+  async registrarDisponibilidad(): Promise<void> {
+    if (!this.usuarioLogueadoEntidad || !this.usuarioLogueadoEntidad.email) {
+      this.alert.mostrarError('Usuario no logueado o email no disponible.');
       return;
     }
 
-    const emailMedico = this.usuarioLogueadoEntidad.email;
     const especialidadSeleccionada = this.form.get('especialidad')?.value;
-    const fechaSeleccionada = this.fechaSeleccionada.replace(/\//g, "-"); 
-    const horaInicio = this.form.get('horaInicio')?.value;
-    const horaFin = this.form.get('horaFin')?.value;
-    const duracionTurnos = this.form.get('duracionTurnos')?.value; 
+    const diasDisponibles = this.form.get('diasDisponibles')?.value;
+
+    if (!especialidadSeleccionada || !diasDisponibles) {
+      this.alert.mostrarError('El formulario está incompleto.');
+      return;
+    }
 
     try {
-      const medicoDocRef = doc(this.firestore, `disponibilidades/${emailMedico}`);
-      const medicoDocSnap = await getDoc(medicoDocRef);
+      const usuariosRef = collection(this.firestore, 'usuarios');
+      const q = query(usuariosRef, where('email', '==', this.usuarioLogueadoEntidad.email));
+      const querySnapshot = await getDocs(q);
 
-      if (medicoDocSnap.exists()) {
-        const disponibilidadExistente = medicoDocSnap.data();
-
-        for (const especialidad in disponibilidadExistente) {
-          const disponibilidad = disponibilidadExistente[especialidad]?.[fechaSeleccionada];
-
-          if (disponibilidad) {
-            const { horaInicio: inicioExistente, horaFin: finExistente } = disponibilidad;
-
-            if (this.checkSolapamiento(inicioExistente, finExistente, horaInicio, horaFin)) {
-              this.alert.mostrarError(
-                'Ya existe una disponibilidad en el mismo horario en otra especialidad. Por favor, elige otro horario.'
-              );
-              return;
-            }
-          }
-        }
-
-        const fieldPath = `${especialidadSeleccionada}.${fechaSeleccionada}`;
-        const disponibilidadData = {
-          [fieldPath]: {
-            horaInicio,
-            horaFin,
-            duracionTurnos
-          }
-        };
-        await updateDoc(medicoDocRef, disponibilidadData);
-        this.alert.mostrarSuccess('Disponibilidad guardada o actualizada correctamente.');
-      } else {
-        const disponibilidadData = {
-          [especialidadSeleccionada]: {
-            [fechaSeleccionada]: {
-              horaInicio,
-              horaFin,
-              duracionTurnos
-            }
-          }
-        };
-        await setDoc(medicoDocRef, disponibilidadData);
-        this.alert.mostrarSuccess('Disponibilidad guardada correctamente.');
+      if (querySnapshot.empty) {
+        this.alert.mostrarError('Usuario no encontrado en la base de datos.');
+        return;
       }
 
+      const usuarioDoc = querySnapshot.docs[0];
+      const usuarioId = usuarioDoc.id;
+      const usuarioData = usuarioDoc.data();
+
+      let disponibilidad: Disponibilidad = usuarioData['disponibilidad'] || {};
+
+      const conflictos = this.verificarSuperposicionHorarios(disponibilidad, especialidadSeleccionada, diasDisponibles);
+      if (conflictos.length > 0) {
+        this.alert.mostrarError(
+          `Conflicto detectado con los horarios ya registrados en las especialidades: ${conflictos.join(', ')}.`
+        );
+        return;
+      }
+
+      disponibilidad[especialidadSeleccionada] = {};
+      this.diasSemana.forEach((dia, index) => {
+        const diaData = diasDisponibles[index];
+        if (diaData.disponible) {
+          disponibilidad[especialidadSeleccionada][dia] = {
+            horaInicio: diaData.horaInicio,
+            horaFin: diaData.horaFin
+          };
+        } else {
+          delete disponibilidad[especialidadSeleccionada][dia]; 
+        }
+      });
+
+      const usuarioDocRef = doc(this.firestore, `usuarios/${usuarioId}`);
+      await updateDoc(usuarioDocRef, { disponibilidad });
+
+      this.alert.mostrarSuccess('Disponibilidad guardada correctamente.');
+
+      setTimeout(() => {
+        this.router.navigate(['/home']);
+      }, 1500);
     } catch (error) {
-      console.error('Error al guardar la disponibilidad:', error);
-      this.alert.mostrarError('Hubo un problema al guardar la disponibilidad.');
+      console.error('Error al registrar la disponibilidad:', error);
+      this.alert.mostrarError('Error al registrar la disponibilidad.');
     }
   }
 
-  checkSolapamiento(inicioExistente: string, finExistente: string, nuevoInicio: string, nuevoFin: string): boolean {
-    return (
-      (nuevoInicio >= inicioExistente && nuevoInicio < finExistente) ||
-      (nuevoFin > inicioExistente && nuevoFin <= finExistente) ||
-      (nuevoInicio <= inicioExistente && nuevoFin >= finExistente)
-    );
+  verificarSuperposicionHorarios(
+    disponibilidad: Disponibilidad,
+    especialidadSeleccionada: string,
+    diasDisponibles: any[]
+  ): string[] {
+    const conflictos = new Set<string>();
+
+    for (const [especialidad, dias] of Object.entries(disponibilidad)) {
+      if (especialidad === especialidadSeleccionada) {
+        continue;
+      }
+
+      this.diasSemana.forEach((dia, index) => {
+        const nuevaHoraInicio = this.convertirHoraEnMinutos(diasDisponibles[index].horaInicio);
+        const nuevaHoraFin = this.convertirHoraEnMinutos(diasDisponibles[index].horaFin);
+
+        if (dias[dia]) {
+          const horaInicioExistente = this.convertirHoraEnMinutos(dias[dia].horaInicio);
+          const horaFinExistente = this.convertirHoraEnMinutos(dias[dia].horaFin);
+
+          if (
+            (nuevaHoraInicio >= horaInicioExistente && nuevaHoraInicio < horaFinExistente) ||
+            (nuevaHoraFin > horaInicioExistente && nuevaHoraFin <= horaFinExistente) ||
+            (nuevaHoraInicio <= horaInicioExistente && nuevaHoraFin >= horaFinExistente)
+          ) {
+            conflictos.add(especialidad); 
+          }
+        }
+      });
+    }
+
+    return Array.from(conflictos); 
+  }
+
+  convertirHoraEnMinutos(hora: string | undefined): number {
+    if (!hora) {
+      console.warn('Hora no definida o inválida:', hora);
+      return 0; 
+    }
+
+    const [horas, minutos] = hora.split(':').map(Number);
+    return horas * 60 + minutos;
+  }
+
+  habilitarEdicion(): void {
+    this.modoLectura = false;
   }
 
   get duracionTurnos() {
     return this.form.get('duracionTurnos');
-  }
-
-  get horaInicio() {
-    return this.form.get('horaInicio');
-  }
-
-  get horaFin() {
-    return this.form.get('horaFin');
   }
 
   get especialidad() {

@@ -1,140 +1,141 @@
-.solicitud-turnos {
+.solicitar-turnos {
+    display: flex;
+    min-height: 69vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.pacientes,
+.medicos,
+.especialidades,
+.dias-disponibles,
+.horarios-disponibles {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.medicos-container,
+.especialidades-container,
+.dias-container,
+.horarios-container {
+    margin-top: 50px;
     display: flex;
     flex-direction: row;
+    gap: 40px;
 }
 
-.filtros-laterales {
-    display: flex;
-    flex-direction: column;
-    flex: 30%;
-    background-color: #212121;
-}
-
-.filtros-laterales h3 {
-    margin-left: 30px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-}
-
-form {
-    margin-left: 30px;
-    display: flex;
-    flex-direction: column;
-}
-
-label {
-    color: #ddd;
-    font-family: 'ubuntu';
-    margin-bottom: 5px;
-}
-
-select {
-    background-color: #333;
-    border: 2px solid #f00;
-    color: #fff;
-    padding: 10px;
-    width: 80%;
-    max-width: 500px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    transition: border 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
-
-select:focus {
-    border: 2px solid #fff;
-    outline: none;
-}
-
-select option {
-    background-color: #333;
-    color: #fff;
-}
-
-.error {
-    color: #ff3333;
-    font-size: 1em;
-    margin-top: 5px;
-}
-
-button[type="submit"] {
-    margin-top: 10px;
-    background-color: #f00;
-    border: none;
-    color: #fff;
-    padding: 10px 20px;
+.medico,
+.especialidad {
+    text-align: center;
     cursor: pointer;
-    font-size: 1em;
+}
+
+h4 {
+    color: white;
+    font-family: 'ubuntu';
+}
+
+.medico img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 10px;
+}
+
+.especialidad img{
+    width: 200px;
+    height: 200px;
+    border-radius: 10%;
+    object-fit: cover;
+    margin-top: 10px;
+}
+
+button {
+    background-color: #1d56d1;
+    color: white;
+    border: none;
+    padding: 10px 20px;
     border-radius: 5px;
-    margin-bottom: 20px;
-    max-width: 150px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-button[type="submit"]:hover {
-    background-color: #c00;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+button:hover {
+    background-color: #111ba7;
 }
 
-button[type="submit"]:disabled {
-    background-color: #666;
+button:disabled {
+    background-color: #ccc;
     cursor: not-allowed;
 }
 
-.turnos {
-    display: flex;
-    flex-direction: row;
-    flex: 70%;
-    margin-bottom: 30px;
+.horario-seleccionado {
+    background-color: green;
+    color: white;
+    border: 2px solid darkgreen;
 }
 
-.calendario {
-    display: flex;
-    flex-direction: column;
-    justify-content: left;
-    margin-left: 50px;
+p {
+    text-align: center;
+    color: #ff3333;
+    font-weight: bold;
 }
 
-.calendario h3 {
-    margin-top: 30px;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 30px;
+.especialidad {
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border 0.3s ease;
 }
 
-.calendario p{
-    margin-bottom: 30px;
+.especialidad.selected {
+    border: 2px solid #007bff;
+    border-radius: 10px;
 }
 
-.forbidden {
-    filter: brightness(0.5);
-    pointer-events: none;
-    opacity: 0.7;
+.tabla-scroll {
+    max-height: 400px;
+    overflow-y: auto;
+    width: 100%;
+    border: 1px solid #444;
+    background-color: #555;
+    margin-top: 50px;
 }
 
-.forbidden app-calendario {
-    pointer-events: none;
-    user-select: none;
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
 }
 
-.horarios {
-    display: flex;
-    flex-direction: column;
-    justify-content: left;
-    margin-left: 70px;
+th,
+td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #444;
 }
 
-.horarios h3 {
-    margin-top: 30px;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 30px;
+th {
+    background-color: #333;
+    color: #f00;
 }
 
-.horarios p{
-    margin-bottom: 30px;
+td {
+    background-color: #555;
+    color: #fff;
+    cursor: pointer;
 }
 
-.horarios button{
-    margin-top: 30px;
-    justify-content: right;
+tr:hover {
+    background-color: #8B0000;
+}
+
+tr:hover td {
+    background-color: #8B0000;
+}
+
+tr:hover i.fa {
+    color: #777;
 }

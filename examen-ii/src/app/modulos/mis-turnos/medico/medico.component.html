@@ -66,7 +66,7 @@
                     <td class="inhabilitado">No disponible</td>
                     }
 
-                    @if (turno.estado != "Finalizado" && turno.estado != 'Cancelado' && turno.estado != "Rechazado") {
+                    @if (turno.estado != "Finalizado" && turno.estado != 'Cancelado' && turno.estado != "Rechazado" && turno.estado != "Aceptado") {
                     <td class="cancel-icon-cell">
                         <i class="fa fa-check fa-2x" aria-hidden="true" (click)="aceptarTurno(turno)"></i>
                     </td>

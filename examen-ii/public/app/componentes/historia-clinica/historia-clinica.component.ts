@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../servicios/auth.service';
 import { Rol } from '../../enums/enums';
-import { Firestore, addDoc, collection, doc, getDoc, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
+import { Firestore, Timestamp, addDoc, collection, doc, getDoc, getDocs, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
 import { AlertService } from '../../servicios/alert.service';
 import { LoadingComponent } from '../loading/loading.component';
 
@@ -35,63 +35,123 @@ export class HistoriaClinicaComponent {
   isMedico = false;
   isPaciente = false;
   pacienteEmail: string | null = null;
+  fechaSolicitud: Date | null = null;
+  editable: boolean | null = null;
   isLoading: boolean = false;
+  historiasClinicasPaciente: any[] = [];
 
   constructor(private auth: AuthService, private firestore: Firestore, private alert: AlertService) { }
 
   async ngOnInit() {
     this.auth.usuarioLogueado$.subscribe((usuario) => {
       this.usuarioLogueado = usuario;
-      console.log('Usuario logueado:', this.usuarioLogueado);
     });
 
-    if (this.usuarioLogueado) {
-      const userRole = await this.auth.getUserRole(this.usuarioLogueado);
-      this.isAdmin = userRole === Rol.Admin;
-      this.isMedico = userRole === Rol.Medico;
-      this.isPaciente = userRole === Rol.Paciente;
-    }
+    this.auth.pacienteHistoriaClinicaEditable$.subscribe((editable) => {
+      this.editable = editable;
+    });
 
-    if (this.isPaciente) {
-      this.auth.setPacienteHistoriaClinica(this.usuarioLogueado);
-      if (this.usuarioLogueado) {
-        await this.cargarHistoriaClinica(this.usuarioLogueado);
-      }
+    this.auth.pacienteHistoriaClinicaEmail$.subscribe(async (paciente) => {
+      this.pacienteEmail = paciente;
+    });
+
+    if (!this.editable) {
+      await this.cargarHistoriaClinicaLectura(this.pacienteEmail);
     }
     else {
-      this.auth.pacienteHistoriaClinicaEmail$.subscribe(async (paciente) => {
-        this.pacienteEmail = paciente;
-        console.log('Paciente HC:', this.pacienteEmail);
-
-        if (this.pacienteEmail) {
-          await this.cargarHistoriaClinica(this.pacienteEmail);
-        } else {
-          console.log('El email del paciente es null, undefined o inválido.');
-        }
+      this.auth.pacienteHistoriaClinicaFechaSolicitud$.subscribe(async (fecha) => {
+        this.fechaSolicitud = fecha;
       });
+
+      if (this.pacienteEmail && this.fechaSolicitud) {
+        await this.cargarHistoriaClinicaEditable(this.pacienteEmail, this.fechaSolicitud);
+      } else {
+        console.log('El email del paciente es null, undefined o inválido.');
+      }
     }
   }
-  
 
-  private async cargarHistoriaClinica(emailPaciente: string) {
+  // Método para cargar la historia clínica desde la colección de turnos
+  private async cargarHistoriaClinicaLectura(emailPaciente: string | null) {
     try {
       this.isLoading = true;
-      const historiasClinicasRef = collection(this.firestore, 'historiasClinicas');
-      const q = query(historiasClinicasRef, where('pacienteEmail', '==', emailPaciente)); 
+  
+      // Referencia a la colección 'turnos'
+      const turnosRef = collection(this.firestore, 'turnos');
+  
+      // Consulta para obtener los turnos del paciente sin ordenar
+      const q = query(turnosRef, where('paciente', '==', emailPaciente));
+  
+      // Obtener los documentos de la consulta
+      const querySnapshot = await getDocs(q);
+  
+      // Limpiar las historias clínicas previas
+      this.historiasClinicasPaciente = [];
+  
+      // Iterar sobre los documentos obtenidos
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const historiaClinicaData = data['historiaClinica'];
+  
+        if (historiaClinicaData) {
+          // Aseguramos que la historia clínica tiene la estructura correcta
+          const historiaClinicaFormateada = {
+            altura: historiaClinicaData.altura || null,
+            peso: historiaClinicaData.peso || null,
+            temperatura: historiaClinicaData.temperatura || null,
+            presion: historiaClinicaData.presion || null,
+            datosDinamicos: historiaClinicaData.datosDinamicos || [],
+            fechaCreacion: historiaClinicaData.fechaCreacion
+          };
+  
+          // Guardamos cada historia clínica formateada en la variable this.historiasClinicasPaciente
+          this.historiasClinicasPaciente.push({
+            fechaCreacion: data['fechaCreacion'], // Fecha de creación del turno
+            historiaClinica: historiaClinicaFormateada
+          });
+        }
+      });
+  
+      // Ordenar en memoria por fecha de creación de manera descendente
+      this.historiasClinicasPaciente.sort((a, b) => {
+        return b.fechaCreacion.seconds - a.fechaCreacion.seconds;  // Ordenar según el campo fechaCreacion
+      });
+    } catch (error) {
+      console.error('Error al cargar las historias clínicas:', error);
+    } finally {
+      this.isLoading = false;
+    }
+  }
 
+  // Método para cargar la historia clínica desde los turnos de un médico y un paciente específico
+  private async cargarHistoriaClinicaEditable(emailPaciente: string, fechaSolicitud: Date) {
+    try {
+      this.isLoading = true;
+
+      const turnosRef = collection(this.firestore, 'turnos');
+      const q = query(turnosRef,
+        where('paciente', '==', emailPaciente),
+        where('fechaSolicitud', '==', fechaSolicitud)
+      );
       const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
-        const data = querySnapshot.docs[0].data(); 
-        this.historiaClinica = {
-          altura: data['altura'] || null,
-          peso: data['peso'] || null,
-          temperatura: data['temperatura'] || null,
-          presion: data['presion'] || null,
-          datosDinamicos: data['datosDinamicos'] || []
-        };
+        const data = querySnapshot.docs[0].data();
+        const historiaClinicaData = data['historiaClinica'];
+
+        if (historiaClinicaData) {
+          this.historiaClinica = {
+            altura: historiaClinicaData.altura || null,
+            peso: historiaClinicaData.peso || null,
+            temperatura: historiaClinicaData.temperatura || null,
+            presion: historiaClinicaData.presion || null,
+            datosDinamicos: historiaClinicaData.datosDinamicos || []
+          };
+        } else {
+          console.log('No se encontró historia clínica para este paciente.');
+        }
       } else {
-        console.log('No se encontró una historia clínica para este paciente.');
+        console.log('No se encontró un turno para este paciente en esta fecha.');
       }
     } catch (error) {
       console.error('Error al obtener la historia clínica:', error);
@@ -106,32 +166,46 @@ export class HistoriaClinicaComponent {
     }
   }
 
+  // Método para guardar la historia clínica
   async guardarHistoriaClinica() {
-    if (this.isMedico && this.pacienteEmail) {
+    if (this.pacienteEmail && this.fechaSolicitud) {
       if (this.validarHistoriaClinica()) {
         const historiaClinicaData = {
-          pacienteEmail: this.pacienteEmail,
-          ...this.historiaClinica,
-          fechaModificacion: new Date()
+          altura: this.historiaClinica.altura,
+          peso: this.historiaClinica.peso,
+          temperatura: this.historiaClinica.temperatura,
+          presion: this.historiaClinica.presion,
+          datosDinamicos: this.historiaClinica.datosDinamicos,
+          fechaCreacion: Timestamp.now() // Fecha de modificación actual
         };
 
         try {
           this.isLoading = true;
 
-          const historiasClinicasRef = collection(this.firestore, 'historiasClinicas');
-          const q = query(historiasClinicasRef, where('pacienteEmail', '==', this.pacienteEmail));
+          // Buscar el turno en la colección de turnos
+          const turnosRef = collection(this.firestore, 'turnos');
+          const q = query(turnosRef,
+            where('paciente', '==', this.pacienteEmail),
+            where('fechaSolicitud', '==', this.fechaSolicitud)  // Usamos la fecha de solicitud tal cual
+          );
           const querySnapshot = await getDocs(q);
 
           if (!querySnapshot.empty) {
-            const docRef = doc(this.firestore, 'historiasClinicas', querySnapshot.docs[0].id);
-            await updateDoc(docRef, historiaClinicaData);
-            this.alert.mostrarSuccess('Historia clínica actualizada con éxito');
-          } else {
-            const historiaClinicaCollection = collection(this.firestore, 'historiasClinicas');
-            await addDoc(historiaClinicaCollection, historiaClinicaData);
+            // Si el turno existe, obtenemos el documento
+            const turnoDoc = querySnapshot.docs[0];
+            const turnoDocRef = doc(this.firestore, `turnos/${turnoDoc.id}`);
+
+            // Guardamos la historia clínica directamente en el campo 'historiaClinica'
+            await updateDoc(turnoDocRef, {
+              historiaClinica: historiaClinicaData
+            });
+
             this.alert.mostrarSuccess('Historia clínica guardada con éxito');
+          } else {
+            // Si no existe el turno, mostramos un mensaje de error
+            this.alert.mostrarError('No se encontró el turno para este paciente en esta fecha');
           }
-        } catch (error: any) {
+        } catch (error) {
           this.alert.mostrarError('Error al guardar la historia clínica');
           console.error('Error:', error);
         } finally {
@@ -141,7 +215,7 @@ export class HistoriaClinicaComponent {
         this.alert.mostrarError('Por favor complete todos los campos obligatorios');
       }
     } else {
-      console.log('No se puede guardar la historia clínica, el email del paciente es inválido.');
+      console.log('No se puede guardar la historia clínica, el email del paciente o la fecha son inválidos.');
     }
   }
 

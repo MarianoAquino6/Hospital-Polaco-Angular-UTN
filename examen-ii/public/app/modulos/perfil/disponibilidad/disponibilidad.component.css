@@ -140,3 +140,27 @@ button[type="submit"]:disabled {
   display: flex;
   flex-direction: column;
 }
+
+.disponibilidad-actual{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.disponibilidad-actual button {
+  margin-top: 20px;
+}
+
+.seleccion-disponibilidad{
+  margin-top: 20px;
+}
+
+.horario{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.seleccion-disponibilidad select{
+  margin-left: 10px;
+  width: 150px;
+}

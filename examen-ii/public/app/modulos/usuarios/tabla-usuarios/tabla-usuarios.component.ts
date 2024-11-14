@@ -33,8 +33,8 @@ export class TablaUsuariosComponent {
 
   async obtenerObjetos() {
     console.log('Configurando loading a true');
-    this.isLoading = true; 
-    console.log('isLoading:', this.isLoading); 
+    this.isLoading = true;
+    console.log('isLoading:', this.isLoading);
 
 
     try {
@@ -55,18 +55,48 @@ export class TablaUsuariosComponent {
       console.error('Error al obtener usuarios:', error);
     } finally {
       console.log('Configurando loading a false');
-      this.isLoading = false; 
-      console.log('isLoading:', this.isLoading); 
+      this.isLoading = false;
+      console.log('isLoading:', this.isLoading);
     }
   }
 
-  private async verificarHistoriaClinica(email: string): Promise<boolean> {
-    const historiasClinicasRef = collection(this.firestore, 'historiasClinicas');
-    const q = query(historiasClinicasRef, where('pacienteEmail', '==', email));
+  async verificarHistoriaClinica(email: string): Promise<boolean> {
+    this.isLoading = true; 
 
-    const querySnapshot = await getDocs(q); 
+    try {
+      const historiasClinicasRef = collection(this.firestore, 'turnos');
+      const q = query(historiasClinicasRef, where('paciente', '==', email));
 
-    return !querySnapshot.empty;
+      const querySnapshot = await getDocs(q);
+      console.log('Consulta ejecutada. Resultados:', querySnapshot.docs.length);
+
+      let historiaEncontrada = false;
+
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(doc => {
+          const data = doc.data();
+          if (data['historiaClinica']) {
+            if (Object.keys(data['historiaClinica']).length > 0) {
+              historiaEncontrada = true;
+            }
+          }
+        });
+      }
+
+      if (historiaEncontrada) {
+        console.log('Historia clínica encontrada.');
+      } else {
+        console.log('No se encontró ninguna historia clínica para el paciente.');
+      }
+
+      return historiaEncontrada;
+
+    } catch (error) {
+      console.error('Error al verificar la historia clínica:', error);
+      return false; 
+    } finally {
+      this.isLoading = false; 
+    }
   }
 
   async cambiarHabilitacionUsuario(activarUsuario: boolean, usuario: UsuarioStandard): Promise<void> {
@@ -108,7 +138,7 @@ export class TablaUsuariosComponent {
 
   verHistoriaClinica(pacienteEmail: string) {
     console.log('seteo a ' + pacienteEmail)
-    this.auth.setPacienteHistoriaClinica(pacienteEmail);
+    this.auth.setPacienteHistoriaClinica(pacienteEmail, false);
     this.router.navigate(['/historia-clinica']);
   }
 }

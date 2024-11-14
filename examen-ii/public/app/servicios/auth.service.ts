@@ -17,10 +17,14 @@ interface Usuario {
 export class AuthService {
   private usuarioLogueadoSource = new BehaviorSubject<string | null>(null);
   private pacienteHistoriaClinicaEmail = new BehaviorSubject<string | null>(null);
+  private pacienteHistoriaClinicaFechaSolicitud = new BehaviorSubject<Date | null>(null);
+  private pacienteHistoriaClinicaEditable = new BehaviorSubject<boolean | null>(null);
   sub!: Subscription;
 
   usuarioLogueado$ = this.usuarioLogueadoSource.asObservable();
   pacienteHistoriaClinicaEmail$ = this.pacienteHistoriaClinicaEmail.asObservable();
+  pacienteHistoriaClinicaFechaSolicitud$ = this.pacienteHistoriaClinicaFechaSolicitud.asObservable();
+  pacienteHistoriaClinicaEditable$ = this.pacienteHistoriaClinicaEditable.asObservable();
 
   constructor(private firestore: Firestore) { }
 
@@ -38,14 +42,24 @@ export class AuthService {
     console.log('Se seteo el usuario logueado: ' + this.usuarioLogueado)
   }
 
-  setPacienteHistoriaClinica(pacienteEmail: string | null) {
+  setPacienteHistoriaClinica(pacienteEmail: string | null, editable: boolean | null, fechaSolicitud: Date | null = null) {
     this.pacienteHistoriaClinicaEmail.next(pacienteEmail);
+    this.pacienteHistoriaClinicaFechaSolicitud.next(fechaSolicitud);
+    this.pacienteHistoriaClinicaEditable.next(editable);
 
-    console.log('Se seteo el paciente para la HC: ' + this.usuarioLogueado)
+    console.log('Se seteo el paciente para la HC: ' + this.usuarioLogueado);
   }
 
   get pacienteHistoriaClinica(): string | null {
     return this.pacienteHistoriaClinicaEmail.value;
+  }
+
+  get pacienteHistoriaClinicaFecha(): Date | null {
+    return this.pacienteHistoriaClinicaFechaSolicitud.value;
+  }
+
+  get pacienteHistoriaClinicaEditablee(): boolean | null {
+    return this.pacienteHistoriaClinicaEditable.value;
   }
 
   logout() {
@@ -72,10 +86,10 @@ export class AuthService {
 
     if (!querySnapshot.empty) {
       const userDoc = querySnapshot.docs[0].data() as Usuario;
-      return userDoc.aceptado; 
+      return userDoc.aceptado;
     }
 
-    return null; 
+    return null;
   }
 
   async usuarioEstaHabilitado(email: string): Promise<boolean | null> {
@@ -85,7 +99,7 @@ export class AuthService {
 
     if (!querySnapshot.empty) {
       const userDoc = querySnapshot.docs[0].data() as Usuario;
-      return userDoc.habilitado ?? null; 
+      return userDoc.habilitado ?? null;
     }
 
     return null;
@@ -120,7 +134,7 @@ export class AuthService {
       return `${userDoc['apellido'] ?? ''} ${userDoc['nombre'] ?? ''}`.trim() || null;
     }
 
-    return null; 
+    return null;
   }
 
   isLoggedIn(): boolean {

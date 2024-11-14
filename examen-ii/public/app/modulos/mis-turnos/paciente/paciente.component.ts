@@ -30,95 +30,69 @@ export class PacienteComponent {
     this.isLoading = true;
 
     try {
-        const turnosCollection = collection(this.firestore, 'turnos');
+      const turnosCollection = collection(this.firestore, 'turnos');
 
-        console.log('Valor de this.usuarioLogueado antes de la consulta:', this.usuarioLogueado);
+      console.log('Valor de this.usuarioLogueado antes de la consulta:', this.usuarioLogueado);
 
-        const q = query(turnosCollection, where('paciente', '==', this.usuarioLogueado));
+      const q = query(turnosCollection, where('paciente', '==', this.usuarioLogueado));
 
-        const allTurnosSnapshot = await getDocs(turnosCollection);
-        console.log('Cantidad total de turnos en la colección:', allTurnosSnapshot.size);
-        allTurnosSnapshot.forEach((doc) => {
-            console.log('Documento en la colección turnos:', doc.data());
-        });
+      const allTurnosSnapshot = await getDocs(turnosCollection);
+      console.log('Cantidad total de turnos en la colección:', allTurnosSnapshot.size);
+      allTurnosSnapshot.forEach((doc) => {
+        console.log('Documento en la colección turnos:', doc.data());
+      });
 
-        const turnosSnapshot = await getDocs(q);
+      const turnosSnapshot = await getDocs(q);
 
-        if (turnosSnapshot.empty) {
-            console.log("No se encontraron turnos para el paciente con el email:", this.usuarioLogueado);
-            return;
-        }
+      if (turnosSnapshot.empty) {
+        console.log("No se encontraron turnos para el paciente con el email:", this.usuarioLogueado);
+        return;
+      }
 
-        console.log('Cantidad de turnos encontrados para el paciente:', turnosSnapshot.size);
+      console.log('Cantidad de turnos encontrados para el paciente:', turnosSnapshot.size);
 
-        this.turnosDisponibles = await Promise.all(turnosSnapshot.docs.map(async (doc) => {
-            const turnoData = doc.data();
-            console.log('Datos del turno encontrado:', turnoData);
+      this.turnosDisponibles = await Promise.all(turnosSnapshot.docs.map(async (doc) => {
+        const turnoData = doc.data();
+        console.log('Datos del turno encontrado:', turnoData);
 
-            console.log(`Comparando email almacenado "${turnoData['paciente']}" con email logueado "${this.usuarioLogueado}"`);
+        console.log(`Comparando email almacenado "${turnoData['paciente']}" con email logueado "${this.usuarioLogueado}"`);
 
-            const medicoNombreCompleto = await this.auth.obtenerNombreCompletoDesdeEmail(turnoData['medico']);
-            const pacienteNombreCompleto = await this.auth.obtenerNombreCompletoDesdeEmail(turnoData['paciente']);
+        const medicoNombreCompleto = await this.auth.obtenerNombreCompletoDesdeEmail(turnoData['medico']);
+        const pacienteNombreCompleto = await this.auth.obtenerNombreCompletoDesdeEmail(turnoData['paciente']);
 
-            const historiaClinicaData = await this.obtenerHistoriaClinica(turnoData['paciente']);
+        const historiaClinica = turnoData['historiaClinica'] || {};
 
-            const turno: Turno = {
-                medico: turnoData['medico'] || '',
-                medicoNombreCompleto: medicoNombreCompleto || '',
-                fecha: turnoData['fecha'] || '',
-                horario: turnoData['horario'] || '',
-                especialidad: turnoData['especialidad'] || '',
-                paciente: turnoData['paciente'] || '',
-                pacienteNombreCompleto: pacienteNombreCompleto || '',
-                estado: turnoData['estado'] || '',
-                resenia: turnoData['resenia'],
-                encuesta: turnoData['encuesta'],
-                calificacion: turnoData['calificacion'],
-                altura: historiaClinicaData.altura, 
-                peso: historiaClinicaData.peso, 
-                temperatura: historiaClinicaData.temperatura, 
-                presion: historiaClinicaData.presion, 
-                datosDinamicos: historiaClinicaData.datosDinamicos 
-            };
+        const turno: Turno = {
+          medico: turnoData['medico'] || '',
+          medicoNombreCompleto: medicoNombreCompleto || '',
+          fecha: turnoData['fecha'] || '',
+          horario: turnoData['horario'] || '',
+          especialidad: turnoData['especialidad'] || '',
+          paciente: turnoData['paciente'] || '',
+          pacienteNombreCompleto: pacienteNombreCompleto || '',
+          estado: turnoData['estado'] || '',
+          resenia: turnoData['resenia'],
+          encuesta: turnoData['encuesta'],
+          calificacion: turnoData['calificacion'],
+          altura: historiaClinica['altura'] || null,
+          peso: historiaClinica['peso'] || null,
+          temperatura: historiaClinica['temperatura'] || null,
+          presion: historiaClinica['presion'] || null,
+          datosDinamicos: historiaClinica['datosDinamicos'] || [],
+          fechaSolicitud: turnoData['fechaSolicitud']
+        };
 
-            console.log('Turno procesado:', turno);
-            return turno;
-        }));
+        console.log('Turno procesado:', turno);
+        return turno;
+      }));
 
-        console.log('Turnos disponibles filtrados:', this.turnosDisponibles);
+      console.log('Turnos disponibles filtrados:', this.turnosDisponibles);
     } catch (error) {
-        console.error("Error al obtener turnos:", error);
+      console.error("Error al obtener turnos:", error);
     } finally {
-        this.isLoading = false;
+      this.isLoading = false;
     }
-}
-
-private async obtenerHistoriaClinica(pacienteEmail: string): Promise<any> {
-    const historiasClinicasRef = collection(this.firestore, 'historiasClinicas');
-    const q = query(historiasClinicasRef, where('pacienteEmail', '==', pacienteEmail));
-    
-    const querySnapshot = await getDocs(q);
-
-    if (!querySnapshot.empty) {
-        const data = querySnapshot.docs[0].data();
-        return {
-            altura: data['altura'] || null,
-            peso: data['peso'] || null,
-            temperatura: data['temperatura'] || null,
-            presion: data['presion'] || null,
-            datosDinamicos: data['datosDinamicos'] || [] 
-        };
-    } else {
-        console.log('No se encontró historia clínica para el paciente:', pacienteEmail);
-        return {
-            altura: null,
-            peso: null,
-            temperatura: null,
-            presion: null,
-            datosDinamicos: []
-        };
-    }
-}
+  }
 
   async cancelarTurno(turno: Turno) {
     const motivo = await this.alert.mostrarDialogoMotivo();
@@ -140,7 +114,7 @@ private async obtenerHistoriaClinica(pacienteEmail: string): Promise<any> {
         const snapshot = await getDocs(q);
 
         if (!snapshot.empty) {
-          const turnoDoc = snapshot.docs[0]; 
+          const turnoDoc = snapshot.docs[0];
           const turnoDocRef = doc(this.firestore, `turnos/${turnoDoc.id}`);
 
           console.log("Intentando cancelar el turno en:", turnoDocRef.path);
@@ -188,7 +162,7 @@ private async obtenerHistoriaClinica(pacienteEmail: string): Promise<any> {
         const snapshot = await getDocs(q);
 
         if (!snapshot.empty) {
-          const turnoDoc = snapshot.docs[0]; 
+          const turnoDoc = snapshot.docs[0];
           const turnoDocRef = doc(this.firestore, `turnos/${turnoDoc.id}`);
 
           await updateDoc(turnoDocRef, {
@@ -229,7 +203,7 @@ private async obtenerHistoriaClinica(pacienteEmail: string): Promise<any> {
         const snapshot = await getDocs(q);
 
         if (!snapshot.empty) {
-          const turnoDoc = snapshot.docs[0]; 
+          const turnoDoc = snapshot.docs[0];
           const turnoDocRef = doc(this.firestore, `turnos/${turnoDoc.id}`);
 
           console.log("Guardando encuesta en:", turnoDocRef.path);
