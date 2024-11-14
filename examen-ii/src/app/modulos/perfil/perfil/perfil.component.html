@@ -22,6 +22,15 @@
             <p><strong>Obra Social:</strong> {{ usuarioLogueadoEntidad.obraSocial }}</p>
             <p><strong>Imagen Secundaria:</strong></p>
             <img [src]="usuarioLogueadoEntidad.imagen2" alt="Imagen 2" class="perfil-imagen-secundaria" />
+            
+            @if (tieneHistoriaClinica) 
+            {
+            <div class="button-group">
+                <button class="btn btn-danger mt-4" (click)="downloadHistoriaClinicaPDF()">
+                    DESCARGAR HISTORIA CLINICA
+                </button>
+            </div>
+            }
         </ng-container>
 
         <ng-container *ngIf="isAdmin(usuarioLogueadoEntidad)">
@@ -35,5 +44,5 @@
 </div>
 
 @if (tieneHistoriaClinica) {
-    <app-historia-clinica></app-historia-clinica>
+<app-historia-clinica></app-historia-clinica>
 }

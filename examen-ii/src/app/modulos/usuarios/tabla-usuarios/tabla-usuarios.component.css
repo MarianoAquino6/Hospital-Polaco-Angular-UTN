@@ -46,7 +46,7 @@ tr:hover td {
     background-color: #8B0000;
 }
 
-tr:hover i.fa {
+tr:hover {
     color: #777;
 }
 
@@ -80,7 +80,7 @@ tr:hover i.fa {
     background-color: #c82333;
 }
 
-i.fa-notes-medical {
+i.fa-clipboard {
     color: yellow;
 }
 

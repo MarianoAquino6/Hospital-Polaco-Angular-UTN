@@ -12,7 +12,7 @@ La página de inicio del sitio web brinda una introducción al **Hospital Polaco
 - **Accesos**: Login y Registro.
 - **Contenido**: Mensaje de bienvenida y breve descripción de la clínica.
 
-[COLOCAR IMAGEN DE LA PÁGINA DE BIENVENIDA]
+![Home](./img/home.png)
 
 ### Registro de Usuarios
 Esta sección permite a los usuarios registrarse como pacientes o especialistas.
@@ -21,7 +21,7 @@ Esta sección permite a los usuarios registrarse como pacientes o especialistas.
 - **Validaciones**: Todos los campos incluyen validaciones adecuadas para garantizar la correcta entrada de datos.
 - **Captcha**: Para proteger el registro, se ha integrado un reCAPTCHA de Google.
 
-[COLOCAR IMAGEN DEL FORMULARIO DE REGISTRO]
+![Registro](./img/registro.png)
 
 ### Login
 El módulo de login permite a los usuarios autenticarse para acceder a la plataforma.
@@ -29,7 +29,7 @@ El módulo de login permite a los usuarios autenticarse para acceder a la plataf
 - **Validaciones**: Solo aquellos usuarios que hayan verificado su cuenta podrán ingresar al portal.
 - **Restricciones**: Los especialistas solo pueden acceder una vez que un administrador apruebe su cuenta.
 
-[COLOCAR IMAGEN DEL FORMULARIO DE LOGIN]
+![Login](./img/login.png)
 
 ### Panel de Administración (Sección de Usuarios)
 Accesible solo para los administradores, esta sección permite la gestión de usuarios.
@@ -37,14 +37,15 @@ Accesible solo para los administradores, esta sección permite la gestión de us
 - **Visualización**: Información detallada de los usuarios, incluyendo sus perfiles.
 - **Descarga de Excel**: Descarga de datos de usuarios en formato Excel para facilitar la gestión administrativa.
 
-[COLOCAR IMAGEN DEL PANEL DE ADMINISTRACIÓN]
+![Usuarios](./img/usuarios.png)
 
 ### Solicitar Turno
 Esta sección permite a los pacientes y administradores solicitar turnos de manera fácil y rápida.
 - **Opciones de Selección**: Especialidad, especialista, día y hora.
 - **Restricciones**: Los pacientes pueden elegir turnos en un rango de hasta 15 días y según la disponibilidad del especialista.
 
-[COLOCAR IMAGEN DE LA SECCIÓN SOLICITAR TURNO]
+![Solicitar Turno 1](./img/solicitar-turno.png)
+![Solicitar Turno 2](./img/solicitar-turno2.png)
 
 ### Mis Turnos (Pacientes y Especialistas)
 Sección donde los usuarios pueden ver y gestionar sus turnos.
@@ -56,15 +57,15 @@ Sección donde los usuarios pueden ver y gestionar sus turnos.
   - Visualización de los turnos asignados, con opciones de aceptar, rechazar, cancelar o finalizar turnos.
   - Posibilidad de dejar una reseña o diagnóstico al finalizar un turno.
 
-[COLOCAR IMAGEN DE LA SECCIÓN MIS TURNOS PARA PACIENTES]
-[COLOCAR IMAGEN DE LA SECCIÓN MIS TURNOS PARA ESPECIALISTAS]
+![Mis Turnos 1](./img/mis-turnos.png)
+![Mis Turnos 2](./img/mis-turnos2.png)
 
 ### Mi Perfil
 En esta sección, los usuarios pueden ver y actualizar su información personal, incluidas las imágenes de perfil y otros datos relevantes.
 - **Pacientes**: Visualización de la historia clínica y datos de contacto.
 - **Especialistas**: Capacidad de ajustar su disponibilidad horaria, tomando en cuenta que pueden tener múltiples especialidades asociadas.
 
-[COLOCAR IMAGEN DE LA SECCIÓN MI PERFIL]
+![Mi Perfil](./img/perfil.png)
 
 ### Historia Clínica
 Los especialistas pueden cargar y ver la historia clínica de los pacientes que han atendido al menos una vez.
@@ -72,7 +73,7 @@ Los especialistas pueden cargar y ver la historia clínica de los pacientes que 
 - **Datos Dinámicos**: Hasta tres datos adicionales con clave y valor, como "caries: 4".
 - **Acceso**: Disponible desde la sección "Mi Perfil" para pacientes, y desde la sección de "Usuarios" para administradores.
 
-[COLOCAR IMAGEN DE LA HISTORIA CLÍNICA]
+![Historia Clinica](./img/historia-clinica.png)
 
 ### Informes y Estadísticas
 Accesible solo para los administradores, esta sección ofrece estadísticas y gráficos sobre el uso del sistema.
@@ -81,8 +82,6 @@ Accesible solo para los administradores, esta sección ofrece estadísticas y gr
   - Cantidad de turnos por especialidad y día.
   - Turnos solicitados y finalizados por cada médico en un intervalo de tiempo.
 - **Descargas**: Posibilidad de descargar los gráficos e informes en PDF o Excel.
-
-[COLOCAR IMAGEN DE LA SECCIÓN DE INFORMES Y ESTADÍSTICAS]
 
 ## Formas de Acceso a las Secciones
 - **Acceso al Sistema**: Desde la página de inicio, los usuarios pueden ingresar al sistema mediante la sección de login.

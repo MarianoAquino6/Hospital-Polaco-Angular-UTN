@@ -25,7 +25,6 @@ export class PacientesComponent {
   ngOnInit() {
     this.auth.usuarioLogueado$.subscribe((usuario) => {
       this.usuarioLogueado = usuario;
-      console.log('Usuario logueado:', this.usuarioLogueado);
     });
     this.obtenerObjetos();
   }
@@ -78,7 +77,7 @@ export class PacientesComponent {
 
   verHistoriaClinica(pacienteEmail: string)
   {
-    this.auth.setPacienteHistoriaClinica(pacienteEmail);
+    this.auth.setPacienteHistoriaClinica(pacienteEmail, false);
     this.router.navigate(['/historia-clinica']);
   }
 }

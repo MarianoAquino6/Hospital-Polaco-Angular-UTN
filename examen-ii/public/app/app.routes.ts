@@ -9,6 +9,8 @@ import { PacientesComponent } from './componentes/pacientes/pacientes.component'
 import { medicoGuard } from './guards/medico.guard';
 import { logueadoGuard } from './guards/logueado.guard';
 import { pacienteGuard } from './guards/paciente.guard';
+import { adminOPacienteGuard } from './guards/admin-opaciente.guard';
+import { medicoOPacienteGuard } from './guards/medico-opaciente.guard';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: "full" },
@@ -30,7 +32,7 @@ export const routes: Routes = [
     {
         path: 'solicitar-turnos',
         loadChildren: () => import('./modulos/solicitar-turno/solicitar-turno.module').then(c => c.SolicitarTurnoModule),
-        canActivate: [adminGuard, pacienteGuard]
+        canActivate: [adminOPacienteGuard]
     },
     {
         path: 'registro',
@@ -39,7 +41,7 @@ export const routes: Routes = [
     {
         path: 'mis-turnos',
         loadChildren: () => import('./modulos/mis-turnos/mis-turnos.module').then(c => c.MisTurnosModule),
-        canActivate: [medicoGuard, pacienteGuard]
+        canActivate: [medicoOPacienteGuard]
     },
 
     { path: '**', component: PageNotFoundComponent }

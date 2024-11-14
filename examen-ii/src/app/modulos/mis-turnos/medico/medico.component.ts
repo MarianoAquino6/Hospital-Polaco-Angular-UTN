@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Turno } from '../../../interfaces/app.interface';
 import { collection, doc, Firestore, getDocs, query, updateDoc, where } from '@angular/fire/firestore';
 import { AlertService } from '../../../servicios/alert.service';
 import { AuthService } from '../../../servicios/auth.service';
 import { EstadoTurno } from '../../../enums/enums';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-medico',
@@ -16,7 +17,7 @@ export class MedicoComponent {
   searchText: string = '';
   usuarioLogueado: string | null = null;
 
-  constructor(private firestore: Firestore, private alert: AlertService, private auth: AuthService) { }
+  constructor(private firestore: Firestore, private alert: AlertService, private auth: AuthService, private router: Router) { }
 
   ngOnInit() {
     this.auth.usuarioLogueado$.subscribe((usuario) => {
@@ -56,8 +57,7 @@ export class MedicoComponent {
 
         const medicoNombreCompleto = await this.auth.obtenerNombreCompletoDesdeEmail(turnoData['medico']);
         const pacienteNombreCompleto = await this.auth.obtenerNombreCompletoDesdeEmail(turnoData['paciente']);
-
-        const historiaClinicaData = await this.obtenerHistoriaClinica(turnoData['paciente']);
+        const historiaClinica = turnoData['historiaClinica'] || {};
 
         const turno: Turno = {
           medico: turnoData['medico'] || '',
@@ -69,11 +69,12 @@ export class MedicoComponent {
           pacienteNombreCompleto: pacienteNombreCompleto || '',
           estado: turnoData['estado'] || '',
           resenia: turnoData['resenia'],
-          altura: historiaClinicaData.altura,
-          peso: historiaClinicaData.peso,
-          temperatura: historiaClinicaData.temperatura,
-          presion: historiaClinicaData.presion,
-          datosDinamicos: historiaClinicaData.datosDinamicos
+          altura: historiaClinica['altura'] || null,
+          peso: historiaClinica['peso'] || null,
+          temperatura: historiaClinica['temperatura'] || null,
+          presion: historiaClinica['presion'] || null,
+          datosDinamicos: historiaClinica['datosDinamicos'] || [],
+          fechaSolicitud: turnoData['fechaSolicitud']
         };
 
         console.log('Turno procesado:', turno);
@@ -85,33 +86,6 @@ export class MedicoComponent {
       console.error("Error al obtener turnos:", error);
     } finally {
       this.isLoading = false;
-    }
-  }
-
-  private async obtenerHistoriaClinica(pacienteEmail: string): Promise<any> {
-    const historiasClinicasRef = collection(this.firestore, 'historiasClinicas');
-    const q = query(historiasClinicasRef, where('pacienteEmail', '==', pacienteEmail));
-
-    const querySnapshot = await getDocs(q);
-
-    if (!querySnapshot.empty) {
-      const data = querySnapshot.docs[0].data();
-      return {
-        altura: data['altura'] || null,
-        peso: data['peso'] || null,
-        temperatura: data['temperatura'] || null,
-        presion: data['presion'] || null,
-        datosDinamicos: data['datosDinamicos'] || []
-      };
-    } else {
-      console.log('No se encontró historia clínica para el paciente:', pacienteEmail);
-      return {
-        altura: null,
-        peso: null,
-        temperatura: null,
-        presion: null,
-        datosDinamicos: []
-      };
     }
   }
 
@@ -135,7 +109,7 @@ export class MedicoComponent {
         const snapshot = await getDocs(q);
 
         if (!snapshot.empty) {
-          const turnoDoc = snapshot.docs[0]; 
+          const turnoDoc = snapshot.docs[0];
           const turnoDocRef = doc(this.firestore, `turnos/${turnoDoc.id}`);
 
           console.log("Intentando cancelar el turno en:", turnoDocRef.path);
@@ -181,7 +155,7 @@ export class MedicoComponent {
         const snapshot = await getDocs(q);
 
         if (!snapshot.empty) {
-          const turnoDoc = snapshot.docs[0]; 
+          const turnoDoc = snapshot.docs[0];
           const turnoDocRef = doc(this.firestore, `turnos/${turnoDoc.id}`);
 
           console.log("Intentando rechazar el turno en:", turnoDocRef.path);
@@ -223,7 +197,7 @@ export class MedicoComponent {
       const snapshot = await getDocs(q);
 
       if (!snapshot.empty) {
-        const turnoDoc = snapshot.docs[0]; 
+        const turnoDoc = snapshot.docs[0];
         const turnoDocRef = doc(this.firestore, `turnos/${turnoDoc.id}`);
 
         console.log("Intentando aceptar el turno en:", turnoDocRef.path);
@@ -265,7 +239,7 @@ export class MedicoComponent {
         const snapshot = await getDocs(q);
 
         if (!snapshot.empty) {
-          const turnoDoc = snapshot.docs[0]; 
+          const turnoDoc = snapshot.docs[0];
           const turnoDocRef = doc(this.firestore, `turnos/${turnoDoc.id}`);
 
           console.log("Guardando resenia y diagnostico en:", turnoDocRef.path);
@@ -297,5 +271,16 @@ export class MedicoComponent {
 
   async leerResenia(turno: Turno) {
     this.alert.leerResenia(turno);
+  }
+
+  verHistoriaClinica(pacienteEmail: string, fechaSolicitud: Date | null | undefined) {
+    // Aquí puedes manejar el caso de que fechaSolicitud sea null o undefined
+    if (fechaSolicitud) {
+      this.auth.setPacienteHistoriaClinica(pacienteEmail, true, fechaSolicitud);
+      this.router.navigate(['/historia-clinica']);
+    } else {
+      // Si fechaSolicitud es null o undefined, tomar alguna acción
+      console.log('Fecha de solicitud no válida');
+    }
   }
 }

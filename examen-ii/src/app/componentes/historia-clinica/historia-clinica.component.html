@@ -7,7 +7,7 @@
 </section>
 
 <section>
-    <div *ngIf="isMedico">
+    <div *ngIf="editable">
         <form (ngSubmit)="guardarHistoriaClinica()" class="historia-clinica">
             <div class="izq">
                 <label>Altura</label>
@@ -34,33 +34,36 @@
         </form>
     </div>
 
-    <div *ngIf="isPaciente || isAdmin">
-        <div class="historia-clinica">
-            <div class="izq">
-                <ul>
-                    <li>
-                        <span class="label">Altura:</span> {{ historiaClinica.altura }}
-                    </li>
-                    <li>
-                        <span class="label">Peso:</span> {{ historiaClinica.peso }}
-                    </li>
-                    <li>
-                        <span class="label">Temperatura:</span> {{ historiaClinica.temperatura }}
-                    </li>
-                    <li>
-                        <span class="label">Presión:</span> {{ historiaClinica.presion }}
-                    </li>
-                </ul>
-            </div>
-
-            <div class="der">
-                <ul>
-                    <div *ngFor="let dato of historiaClinica.datosDinamicos">
+    <div *ngIf="!editable">
+        <div class="historia-clinica-lectura" *ngFor="let historia of historiasClinicasPaciente">
+            <h3>Fecha: {{ historia.historiaClinica.fechaCreacion.toDate() | date: 'dd/MM/yyyy' }}</h3>
+            <div class="hc-individual">
+                <div class="izq">
+                    <ul>
                         <li>
-                            <span class="label">{{ dato.clave }}:</span> {{ dato.valor }}
+                            <span class="label">Altura:</span> {{ historia.historiaClinica.altura }}
                         </li>
-                    </div>
-                </ul>
+                        <li>
+                            <span class="label">Peso:</span> {{ historia.historiaClinica.peso }}
+                        </li>
+                        <li>
+                            <span class="label">Temperatura:</span> {{ historia.historiaClinica.temperatura }}
+                        </li>
+                        <li>
+                            <span class="label">Presión:</span> {{ historia.historiaClinica.presion }}
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="der">
+                    <ul>
+                        <div *ngFor="let dato of historia.historiaClinica.datosDinamicos">
+                            <li>
+                                <span class="label">{{ dato.clave }}:</span> {{ dato.valor }}
+                            </li>
+                        </div>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

@@ -2,11 +2,7 @@
 
 <h3>Disponibilidad Horaria</h3>
 
-<app-calendario (dateSelected)="handleDateSelected($event)"></app-calendario>
-
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    @if (fechaSeleccionada)
-    {
     <div class="seleccion-especialidad" style="margin-top: 20px;">
         <label for="especialidad">Especialidad</label>
         <select formControlName="especialidad">
@@ -21,42 +17,60 @@
         </div>
     </div>
 
-    <div *ngIf="form.get('especialidad')?.value">
-        <label>Franja Horaria:</label>
-        <div class="disponibilidad">
-            <div class="horarios">
+    @if(form.get('especialidad')?.value)
+    {
+    <!-- Mostrar la disponibilidad existente si está cargada -->
+    <div *ngIf="disponibilidadCargada" class="disponibilidad-actual">
+        <h4>Disponibilidad Actual:</h4>
+        <div *ngFor="let dia of diasSemana">
+            <strong>🔸 {{ dia }}:</strong>
+            <span *ngIf="disponibilidadCargada[dia]?.horaInicio">
+                {{ disponibilidadCargada[dia].horaInicio }} - {{ disponibilidadCargada[dia].horaFin }}
+            </span>
+            <span *ngIf="!disponibilidadCargada[dia]?.horaInicio"> Sin horarios registrados </span>
+        </div>
+        @if (modoLectura) {
+        <button type="button" (click)="habilitarEdicion()">Editar</button>
+        }
+    </div>
+
+    <!-- Mostrar formulario solo si se selecciona una especialidad y no está en modo lectura -->
+    <div *ngIf="form.get('especialidad')?.value && !modoLectura" formArrayName="diasDisponibles"
+        class="seleccion-disponibilidad">
+        <div *ngFor="let dia of diasDisponibles.controls; let i = index" [formGroupName]="i" class="dia-horario">
+            <h4>
+                <label class="dia">
+                    {{ diasSemana[i] }}
+                    <input type="checkbox" formControlName="disponible" (change)="toggleDisponibilidad(i)" />
+                </label>
+            </h4>
+
+            <div class="horario" *ngIf="diasDisponibles.at(i).get('disponible')?.value">
                 <label>Hora de Inicio:</label>
-                <select formControlName="horaInicio" style="margin-right: 20px;">
-                    <option *ngFor="let hora of horas" [value]="hora">{{hora}}</option>
+                <select formControlName="horaInicio">
+                    <option *ngFor="let hora of horarios[i]" [value]="hora">{{ hora }}</option>
                 </select>
 
-                <label>Hora de Fin:</label>
+                <label style="margin-left: 10px;">Hora de Fin:</label>
                 <select formControlName="horaFin">
-                    <option *ngFor="let hora of horas" [value]="hora">{{hora}}</option>
+                    <option *ngFor="let hora of horarios[i]" [value]="hora">{{ hora }}</option>
                 </select>
-                <div *ngIf="form.hasError('finMenorQueInicio')">
-                    <small class="error">La hora de fin debe ser mayor que la hora de inicio.</small>
-                </div>
+            </div>
+
+            <div *ngIf="diasDisponibles.at(i).hasError('finMenorQueInicio')">
+                <small class="error">La hora de fin debe ser mayor que la hora de inicio.</small>
+            </div>
+
+            <div *ngIf="!diasDisponibles.at(i).get('disponible')?.value" style="margin-bottom: 10px;">
+                <small>Este día no estará disponible.</small>
             </div>
         </div>
     </div>
 
-    <div class="duracion-turnos">
-        <label>Duración de los turnos:</label>
-        <input type="number" formControlName="duracionTurnos" min="30" max="60" step="1">
-        <div *ngIf="duracionTurnos?.hasError('required') && duracionTurnos?.touched">
-            <small class="error">Este campo es obligatorio.</small>
-        </div>
-        <div *ngIf="duracionTurnos?.hasError('min') && duracionTurnos?.touched">
-            <small class="error">Debe ser mínimo {{ duracionTurnos?.getError('min').min }} minutos.</small>
-        </div>
-        <div *ngIf="duracionTurnos?.hasError('max') && duracionTurnos?.touched">
-            <small class="error">Debe ser máximo {{ duracionTurnos?.getError('max').max }} minutos.</small>
-        </div>
+    <div *ngIf="!modoLectura">
+        <button type="submit" [disabled]="form.invalid">
+            Guardar
+        </button>
     </div>
-
-    <button type="submit" [disabled]="form.invalid">
-        Guardar
-    </button>
     }
 </form>

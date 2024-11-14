@@ -23,12 +23,12 @@
                     <th>Estado</th>
                     <th>Cancelar</th>
                     <th>Rechazar</th>
-                    <th>Aceptar</th> 
-                    <th>Finalizar</th> 
-                    <th>Ver reseña</th> 
+                    <th>Aceptar</th>
+                    <th>Finalizar</th>
+                    <th>Ver reseña</th>
+                    <th>Completar HC</th>
                 </tr>
-                <tr
-                    *ngFor="let turno of turnosDisponibles | filtroGenerico: searchText : [
+                <tr *ngFor="let turno of turnosDisponibles | filtroGenerico: searchText : [
                         'medicoNombreCompleto', 'especialidad', 'fecha', 'horario', 'estado',
                         'pacienteNombreCompleto', 'altura', 'peso', 'temperatura', 'presion',
                         'datosDinamicos'
@@ -41,11 +41,12 @@
                     <td>{{ turno.estado }}</td>
 
                     @if(turno.estado == "Cancelado") {
-                        <td class="inhabilitado">Ya cancelado</td>
+                    <td class="inhabilitado">Ya cancelado</td>
                     }
-                    @else if (turno.estado != "Aceptado" && turno.estado != 'Finalizado' && turno.estado != "Rechazado") {
+                    @else if (turno.estado != "Aceptado" && turno.estado != 'Finalizado' && turno.estado != "Rechazado")
+                    {
                     <td class="cancel-icon-cell">
-                        <i class="fa fa-times" aria-hidden="true" (click)="cancelarTurno(turno)"></i>
+                        <i class="fa fa-times fa-2x" aria-hidden="true" (click)="cancelarTurno(turno)"></i>
                     </td>
                     }
                     @else {
@@ -53,11 +54,12 @@
                     }
 
                     @if(turno.estado == "Rechazado") {
-                        <td class="inhabilitado">Ya rechazado</td>
+                    <td class="inhabilitado">Ya rechazado</td>
                     }
-                    @else if (turno.estado != "Aceptado" && turno.estado != 'Finalizado' && turno.estado != "Cancelado") {
+                    @else if (turno.estado != "Aceptado" && turno.estado != 'Finalizado' && turno.estado != "Cancelado")
+                    {
                     <td class="cancel-icon-cell">
-                        <i class="fa fa-ban" aria-hidden="true" (click)="rechazarTurno(turno)"></i>
+                        <i class="fa fa-ban fa-2x" aria-hidden="true" (click)="rechazarTurno(turno)"></i>
                     </td>
                     }
                     @else {
@@ -66,7 +68,7 @@
 
                     @if (turno.estado != "Finalizado" && turno.estado != 'Cancelado' && turno.estado != "Rechazado") {
                     <td class="cancel-icon-cell">
-                        <i class="fa fa-check" aria-hidden="true" (click)="aceptarTurno(turno)"></i>
+                        <i class="fa fa-check fa-2x" aria-hidden="true" (click)="aceptarTurno(turno)"></i>
                     </td>
                     }
                     @else {
@@ -75,7 +77,7 @@
 
                     @if (turno.estado == "Aceptado") {
                     <td class="cancel-icon-cell">
-                        <i class="fa fa-flag-checkered" aria-hidden="true" (click)="finalizarTurno(turno)"></i>
+                        <i class="fa fa-flag-checkered fa-2x" aria-hidden="true" (click)="finalizarTurno(turno)"></i>
                     </td>
                     }
                     @else {
@@ -84,8 +86,35 @@
 
                     @if (turno.resenia) {
                     <td class="cancel-icon-cell">
-                        <i class="fa fa-comment" aria-hidden="true" (click)="leerResenia(turno)"></i>
+                        <i class="fa fa-comment fa-2x" aria-hidden="true" (click)="leerResenia(turno)"></i>
                     </td>
+                    }
+                    @else {
+                    <td class="inhabilitado">No disponible</td>
+                    }
+
+                    @if (turno.estado == "Finalizado") {
+
+                        @if(!turno.altura)
+                        {
+                            <td>
+                                <div class="verde" (click)="verHistoriaClinica(turno.paciente, turno.fechaSolicitud)">
+                                    <button>
+                                        Completar
+                                    </button>
+                                </div>
+                            </td>
+                        }
+                        @else
+                        {
+                            <td>
+                                <div class="verde" (click)="verHistoriaClinica(turno.paciente, turno.fechaSolicitud)">
+                                    <button>
+                                        Editar
+                                    </button>
+                                </div>
+                            </td>
+                        }
                     }
                     @else {
                     <td class="inhabilitado">No disponible</td>

@@ -65,7 +65,7 @@ export class TurnosComponent {
 
       const ahora = new Date(); 
       this.turnosDisponibles = turnos.filter(turno => {
-        const [day, month, year] = turno.fecha.split('-').map(Number); 
+        const [year, month, day] = turno.fecha.split('-').map(Number); 
         const [startHour, endHour] = turno.horario.split(' - '); 
         const fechaHoraTurno = new Date(year, month - 1, day, ...startHour.split(':').map(Number));
         console.log('Fecha y hora del turno:', fechaHoraTurno); 
