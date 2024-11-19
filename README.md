@@ -5,6 +5,12 @@ Este proyecto representa el portal web del **Hospital Polaco de Buenos Aires**, 
 
 El hospital cuenta con 6 consultorios, dos laboratorios físicos y una sala de espera general. El horario de atención es de lunes a viernes de 8:00 a 19:00 y los sábados de 8:00 a 14:00.
 
+## Deploy
+
+Podrás acceder al portal web mediante el siguiente link de acceso:
+
+https://segundo-examen-labo-iv.web.app/home
+
 ## Pantallas y Secciones del Sistema
 
 ### Página de Bienvenida
