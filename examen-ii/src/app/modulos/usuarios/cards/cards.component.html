@@ -1,0 +1,12 @@
+@if(pacientes.length == 0)
+{
+    <p>No hay pacientes disponibles</p>
+}
+@else {
+    <div class="pacientes-container">
+        <div class="paciente" *ngFor="let paciente of pacientes" (click)="descargarExcel(paciente.email)">
+            <img [src]="paciente.imagen1" alt="Imagen del Paciente" />
+            <h4>{{ paciente.nombre }} {{ paciente.apellido }}</h4>
+        </div>
+    </div>
+}

@@ -139,3 +139,34 @@ tr:hover td {
 tr:hover i.fa {
     color: #777;
 }
+
+/* Estilos solo para los botones de horarios */
+.horario-button {
+    background-color: #1d56d1;
+    color: white;
+    border: none;
+    padding: 0; /* El padding se ajusta para hacerlo cuadrado */
+    border-radius: 15px; /* Bordes redondeados */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100px; /* Ancho específico para que sea cuadrado */
+    height: 100px; /* Altura igual que el ancho */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.horario-button:hover {
+    background-color: #111ba7;
+}
+
+.horario-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.horario-seleccionado {
+    background-color: green;
+    color: white;
+    border: 2px solid darkgreen;
+}

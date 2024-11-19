@@ -9,11 +9,13 @@ import { FormsModule } from '@angular/forms';
 import { FirebaseError } from '@angular/fire/app';
 import { Rol } from '../../enums/enums';
 import { LoadingComponent } from '../loading/loading.component';
+import { AutocompletarDirective } from '../../directivas/autocompletar.directive';
+import { MostrarSiCumpleCondicionDirective } from '../../directivas/mostrar-si-cumple-condicion.directive';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingComponent],
+  imports: [CommonModule, FormsModule, LoadingComponent, AutocompletarDirective, MostrarSiCumpleCondicionDirective],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -23,36 +25,12 @@ export class LoginComponent {
 
   usuarioLogeado: string = "";
   mensajeError: string = "";
-  rolUsuario!: Rol;
+  rolUsuario!: Rol | null;
   isLoading = false;
 
-  constructor(public auth: Auth, private router: Router, private firestore: Firestore, private alert: AlertService, private authService: AuthService) {
-
-  }
-
-  autocompletarPaciente1() {
-    this.usernameLogin = "xejafes529@acroins.com";
-    this.passLogin = "123456";
-  }
-  autocompletarPaciente2() {
-    this.usernameLogin = "jebivix505@acroins.com";
-    this.passLogin = "123456";
-  }
-  autocompletarPaciente3() {
-    this.usernameLogin = "yojew10349@edectus.com";
-    this.passLogin = "123456";
-  }
-  autocompletarMedico1() {
-    this.usernameLogin = "pidek10164@aqqor.com";
-    this.passLogin = "123456";
-  }
-  autocompletarMedico2() {
-    this.usernameLogin = "telep63719@aleitar.com";
-    this.passLogin = "123456";
-  }
-  autocompletarAdmin() {
-    this.usernameLogin = "ramey54405@aqqor.com";
-    this.passLogin = "123456";
+  constructor(public auth: Auth, private router: Router, private firestore: Firestore, private alert: AlertService, private authService: AuthService) 
+  { 
+    
   }
 
   async login() {
@@ -66,6 +44,8 @@ export class LoginComponent {
         this.alert.mostrarError('No ha verificado su cuenta');
         return;
       }
+
+      this.rolUsuario = await this.authService.getUserRole(user.email || "");
 
       if (await this.authService.getUserRole(user.email || "") == Rol.Medico) {
         if (!await this.authService.userWasAccepted(user.email || "")) {

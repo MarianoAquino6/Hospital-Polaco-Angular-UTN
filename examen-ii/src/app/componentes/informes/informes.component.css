@@ -1,0 +1,125 @@
+.lista-informes{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 40vh;
+    margin-bottom: 20px;
+}
+
+.lista-informes h3 {
+    margin-top: 30px;
+}
+
+.informes-container {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 40px;
+}
+
+.informe {
+    text-align: center;
+    cursor: pointer;
+}
+
+h4 {
+    margin-top: 8px;
+    color: white;
+    font-family: 'ubuntu';
+}
+
+.informe img{
+    width: 200px;
+    height: 200px;
+    border-radius: 10%;
+    object-fit: cover;
+    margin-top: 10px;
+}
+
+.graficos-estadisticas {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    min-height: 40vh;
+}
+
+.mensaje {
+    min-height: 30vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mensaje p {
+    font-size: large;
+    text-decoration: wavy;
+}
+
+.grafico {
+    display: flex;
+    flex: 60%;
+    justify-content: center;
+    align-items: center;
+}
+
+.grafico canvas {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    width: 100% !important; 
+    height: 400px !important; 
+}
+
+.estadisticas {
+    display: flex;
+    flex: 40%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.estadisticas button {
+    margin-top: 20px;
+}
+
+.estadisticas h4 {
+    color: #d11d1d;
+}
+
+.datepicker-container {
+    display: flex;
+    gap: 10px;
+}
+
+.datepicker-container input[type="date"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc; 
+    border-radius: 5px;
+    background-color: #333;
+    color: #ef0808; 
+    margin-bottom: 10px;
+    width: 100%; 
+    box-sizing: border-box; 
+}
+
+button {
+    background-color: #d11d1d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #911111;
+}
+
+button:disabled {
+    background-color: #aaa; 
+    color: #666;
+    cursor: not-allowed; 
+}

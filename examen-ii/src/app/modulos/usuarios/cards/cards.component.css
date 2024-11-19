@@ -1,0 +1,27 @@
+.pacientes-container {
+    margin-top: 50px;
+    margin-bottom: 50px;
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    justify-content: center;
+    align-items: center;
+}
+
+.paciente {
+    text-align: center;
+    cursor: pointer;
+}
+
+.paciente img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: 10px;
+}
+
+h4 {
+    color: white;
+    font-family: 'ubuntu';
+}

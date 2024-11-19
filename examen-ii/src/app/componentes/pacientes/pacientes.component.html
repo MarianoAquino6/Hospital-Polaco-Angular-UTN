@@ -6,31 +6,53 @@
     </div>
 </section>
 
-<section class="pacientes">
-    <div class="tabla">
-        <div class="tabla-scroll">
+<section class="pacientes-main">
+
+    <section *ngIf="pantallaActual === 'pacientes'" class="pacientes" [@slideInOutPatients]="animacionSalida ? 'leave' : 'enter'">
+        <h3>Seleccione un paciente</h3>
+        <div class="pacientes-container">
+            <div class="paciente" *ngFor="let objeto of objetos" (click)="mostrarDetalles(objeto.email)">
+                <h4>{{ objeto.nombre }} {{ objeto.apellido }}</h4>
+                <img [src]="objeto.imagen1" alt="Imagen del Paciente" />
+            </div>
+        </div>
+    </section>
+
+    <section *ngIf="pantallaActual === 'detalles-turnos'" class="detalles-turnos" [@slideInOutDetails]="animacionSalida ? 'enter' : 'leave'">
+        <h3>Turnos del Paciente</h3>
+
+        <div class="turnos">
             <table>
                 <tr>
-                    <th>Email</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Documento</th>
-                    <th>Obra Social</th>
-                    <th>Edad</th>
-                    <th>Historia Clinica</th>
+                    <th>Especialidad</th>
+                    <th>Fecha</th>
+                    <th>Horario</th>
+                    <th>Estado</th>
+                    <th>Historia Clínica</th>
+                    <th>Reseña</th>
                 </tr>
-                <tr *ngFor="let objeto of objetos">
-                    <td>{{ objeto.email }}</td>
-                    <td>{{ objeto.nombre }}</td>
-                    <td>{{ objeto.apellido }}</td>
-                    <td>{{ objeto.documento }}</td>
-                    <td>{{ objeto.obraSocial }}</td>
-                    <td>{{ objeto.edad }}</td>
+                <tr *ngFor="let turno of turnosPaciente">
+                    <td>{{ turno.especialidad }}</td>
+                    <td>{{ turno.fecha }}</td>
+                    <td>{{ turno.horario }}</td>
+                    <td>{{ turno.estado }}</td>
                     <td class="cancel-icon-cell">
-                        <i class="fa fa-clipboard fa-2x" aria-hidden="true" (click)="verHistoriaClinica(objeto.email)"></i>
+                        <i class="fa fa-clipboard fa-2x" aria-hidden="true"
+                            (click)="verHistoriaClinica(turno.paciente)"></i>
                     </td>
+                    @if (turno.resenia) {
+                    <td class="cancel-icon-cell">
+                        <i class="fa fa-comment fa-2x" aria-hidden="true" (click)="leerResenia(turno)"></i>
+                    </td>
+                    }
+                    @else {
+                    <td class="inhabilitado">Aún no existe</td>
+                    }
                 </tr>
             </table>
         </div>
-    </div>
+
+        <button (click)="regresar()">ATRÁS</button>
+    </section>
+
 </section>

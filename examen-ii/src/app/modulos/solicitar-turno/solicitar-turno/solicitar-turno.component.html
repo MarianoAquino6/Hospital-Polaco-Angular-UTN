@@ -64,7 +64,7 @@
         <h3>Horarios Disponibles</h3>
         <div class="horarios-container">
             <button *ngFor="let horario of horariosDisponibles" (click)="seleccionarHorario(horario)"
-                [ngClass]="{'horario-seleccionado': horario === horarioSeleccionado}">
+                [ngClass]="{'horario-seleccionado': horario === horarioSeleccionado, 'horario-button': true}">
                 {{ horario }}
             </button>
             <p *ngIf="horariosDisponibles.length === 0">No hay horarios disponibles.</p>

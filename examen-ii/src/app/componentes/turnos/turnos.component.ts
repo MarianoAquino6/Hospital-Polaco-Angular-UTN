@@ -8,11 +8,12 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../servicios/auth.service';
 import { LoadingComponent } from '../loading/loading.component';
 import { EstadoTurno } from '../../enums/enums';
+import { GeneroPipe } from '../../pipes/genero.pipe';
 
 @Component({
   selector: 'app-turnos',
   standalone: true,
-  imports: [CommonModule, FiltroGenericoPipe, FormsModule, LoadingComponent],
+  imports: [CommonModule, FiltroGenericoPipe, FormsModule, LoadingComponent, GeneroPipe],
   templateUrl: './turnos.component.html',
   styleUrl: './turnos.component.css'
 })

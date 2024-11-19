@@ -52,17 +52,17 @@ export class AlertService {
       showCancelButton: true,
       confirmButtonText: 'Cancelar Turno',
       cancelButtonText: 'Cancelar',
-      background: '#333',       
-      color: '#fff',             
-      icon: 'warning',           
-      iconColor: '#FF0000',      
+      background: '#333',
+      color: '#fff',
+      icon: 'warning',
+      iconColor: '#FF0000',
       customClass: {
-        popup: 'colored-toast',  
-        confirmButton: 'confirm-button', 
-        cancelButton: 'cancel-button'    
+        popup: 'colored-toast',
+        confirmButton: 'confirm-button',
+        cancelButton: 'cancel-button'
       },
       inputAttributes: {
-        style: 'color: #fff; background-color: #444; border: 1px solid #555; padding: 10px; border-radius: 4px;' 
+        style: 'color: #fff; background-color: #444; border: 1px solid #555; padding: 10px; border-radius: 4px;'
       }
     }).then(result => {
       if (result.isConfirmed) {
@@ -81,17 +81,17 @@ export class AlertService {
       showCancelButton: true,
       confirmButtonText: 'Rechazar Turno',
       cancelButtonText: 'Cancelar',
-      background: '#333',       
-      color: '#fff',             
-      icon: 'warning',           
-      iconColor: '#FF0000',      
+      background: '#333',
+      color: '#fff',
+      icon: 'warning',
+      iconColor: '#FF0000',
       customClass: {
-        popup: 'colored-toast',  
-        confirmButton: 'confirm-button', 
-        cancelButton: 'cancel-button'    
+        popup: 'colored-toast',
+        confirmButton: 'confirm-button',
+        cancelButton: 'cancel-button'
       },
       inputAttributes: {
-        style: 'color: #fff; background-color: #444; border: 1px solid #555; padding: 10px; border-radius: 4px;' 
+        style: 'color: #fff; background-color: #444; border: 1px solid #555; padding: 10px; border-radius: 4px;'
       }
     }).then(result => {
       if (result.isConfirmed) {
@@ -110,17 +110,17 @@ export class AlertService {
       showCancelButton: true,
       confirmButtonText: 'Enviar',
       cancelButtonText: 'Cancelar',
-      background: '#333',       
-      color: '#fff',             
+      background: '#333',
+      color: '#fff',
       icon: 'info',
-      iconColor: '#FF0000',      
+      iconColor: '#FF0000',
       customClass: {
-        popup: 'colored-toast',  
-        confirmButton: 'confirm-button', 
-        cancelButton: 'cancel-button'    
+        popup: 'colored-toast',
+        confirmButton: 'confirm-button',
+        cancelButton: 'cancel-button'
       },
       inputAttributes: {
-        style: 'color: #fff; background-color: #444; border: 1px solid #555; padding: 10px; border-radius: 4px;' 
+        style: 'color: #fff; background-color: #444; border: 1px solid #555; padding: 10px; border-radius: 4px;'
       }
     }).then(result => {
       if (result.isConfirmed) {
@@ -144,13 +144,13 @@ export class AlertService {
             </div>
         `,
       icon: 'info',
-      iconColor: '#FF0000', 
-      background: '#333',   
-      color: '#fff',        
+      iconColor: '#FF0000',
+      background: '#333',
+      color: '#fff',
       confirmButtonText: 'Cerrar',
       customClass: {
-        popup: 'colored-toast',  
-        confirmButton: 'confirm-button' 
+        popup: 'colored-toast',
+        confirmButton: 'confirm-button'
       }
     });
   }
@@ -177,14 +177,14 @@ export class AlertService {
       showCancelButton: true,
       confirmButtonText: 'Enviar',
       cancelButtonText: 'Cancelar',
-      background: '#333',       
-      color: '#fff',             
-      icon: 'question',          
-      iconColor: '#FF0000',      
+      background: '#333',
+      color: '#fff',
+      icon: 'question',
+      iconColor: '#FF0000',
       customClass: {
-        popup: 'colored-toast',  
-        confirmButton: 'confirm-button', 
-        cancelButton: 'cancel-button', 
+        popup: 'colored-toast',
+        confirmButton: 'confirm-button',
+        cancelButton: 'cancel-button',
       },
       preConfirm: () => {
         const recomendacion = (document.getElementById('recomendacion') as HTMLSelectElement).value;
@@ -261,6 +261,25 @@ export class AlertService {
         return result.value || null;
       }
       return null;
+    });
+  }
+
+  mostrarFiltroEspecialistaDialogo(): Promise<boolean> {
+    return Swal.fire({
+      title: '¿Deseas aplicar un filtro según especialista?',
+      showDenyButton: true,
+      confirmButtonText: 'Sí',
+      denyButtonText: 'No',
+      background: '#333',
+      color: '#fff',
+      icon: 'question',
+      iconColor: '#FF0000'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        return true;
+      } else {
+        return false;
+      }
     });
   }
 }

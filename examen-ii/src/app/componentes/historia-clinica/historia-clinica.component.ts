@@ -6,11 +6,13 @@ import { Rol } from '../../enums/enums';
 import { Firestore, Timestamp, addDoc, collection, doc, getDoc, getDocs, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
 import { AlertService } from '../../servicios/alert.service';
 import { LoadingComponent } from '../loading/loading.component';
+import { Router } from '@angular/router';
+import { UnidadesHcPipe } from '../../pipes/unidades-hc.pipe';
 
 @Component({
   selector: 'app-historia-clinica',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingComponent],
+  imports: [CommonModule, FormsModule, LoadingComponent, UnidadesHcPipe],
   templateUrl: './historia-clinica.component.html',
   styleUrl: './historia-clinica.component.css'
 })
@@ -40,7 +42,7 @@ export class HistoriaClinicaComponent {
   isLoading: boolean = false;
   historiasClinicasPaciente: any[] = [];
 
-  constructor(private auth: AuthService, private firestore: Firestore, private alert: AlertService) { }
+  constructor(private auth: AuthService, private firestore: Firestore, private alert: AlertService, private router: Router) { }
 
   async ngOnInit() {
     this.auth.usuarioLogueado$.subscribe((usuario) => {
@@ -201,6 +203,10 @@ export class HistoriaClinicaComponent {
             });
 
             this.alert.mostrarSuccess('Historia clínica guardada con éxito');
+
+            setTimeout(() => {
+              this.router.navigate(['/mis-turnos/medicos']);
+            }, 1500);
           } else {
             // Si no existe el turno, mostramos un mensaje de error
             this.alert.mostrarError('No se encontró el turno para este paciente en esta fecha');

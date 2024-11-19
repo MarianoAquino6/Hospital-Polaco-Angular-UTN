@@ -53,3 +53,75 @@
   border-radius: 10px;
   border: 1px solid #fff;
 }
+
+.descargaHC {
+  display: flex; /* Agregar display: flex */
+  flex-direction: column; /* Asegura que los elementos se apilen verticalmente */
+  justify-content: center;
+  align-items: center;
+  text-align: center; /* Centra el contenido textual */
+  width: 100%; /* Asegura que ocupe todo el ancho disponible */
+}
+
+.tabla {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-left: 20px;
+}
+
+.tabla-scroll {
+  max-height: 400px;
+  overflow-y: auto;
+  width: 100%;
+  border: 1px solid #444;
+  background-color: #555;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: center;
+  border: 1px solid #444;
+}
+
+th {
+  background-color: #333;
+  color: #f00;
+}
+
+td {
+  background-color: #555;
+  color: #fff;
+  cursor: pointer;
+}
+
+i.fa {
+  font-size: 20px;
+  color: #444;
+  transition: color 0.3s ease;
+}
+
+tr:hover {
+  background-color: #8B0000;
+}
+
+tr:hover td {
+  background-color: #8B0000;
+}
+
+tr:hover i.fa {
+  color: #777;
+}
+
+tr.selected i.fa {
+  color: #b30000;
+}

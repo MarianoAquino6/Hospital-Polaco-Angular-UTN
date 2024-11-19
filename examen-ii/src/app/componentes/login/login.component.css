@@ -116,3 +116,14 @@ h4 {
     color: white;
     font-family: 'ubuntu';
 }
+
+.bienvenida{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+}
+
+.bienvenida p {
+    color: #f00;
+}

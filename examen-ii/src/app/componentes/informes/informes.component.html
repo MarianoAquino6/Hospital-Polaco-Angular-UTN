@@ -1,0 +1,136 @@
+<app-loading [isLoading]="isLoading"></app-loading>
+
+<section>
+    <div class="banner">
+        <h2>INFORMES</h2>
+    </div>
+</section>
+
+<section class="lista-informes">
+    <h3>Informes disponibles</h3>
+
+    <div class="informes-container">
+        <div class="informe" (click)="mostrarInforme(0)">
+            <img src="assets/img/informe.png" />
+            <h4>Ingresos Al Sistema</h4>
+        </div>
+
+        <div class="informe" (click)="mostrarInforme(1)">
+            <img src="assets/img/informe.png" />
+            <h4>Turnos por Especialidad</h4>
+        </div>
+
+        <div class="informe" (click)="mostrarInforme(2)">
+            <img src="assets/img/informe.png" />
+            <h4>Turnos por Día</h4>
+        </div>
+
+        <div class="informe" (click)="mostrarInforme(3)">
+            <img src="assets/img/informe.png" />
+            <h4>Turnos solicitados por médico</h4>
+        </div>
+
+        <div class="informe" (click)="mostrarInforme(4)">
+            <img src="assets/img/informe.png" />
+            <h4>Turnos finalizados por médico</h4>
+        </div>
+    </div>
+</section>
+
+<section *ngIf="informeAMostrar !== null" class="graficos-estadisticas">
+    
+    <div class="grafico">
+        <div *ngIf="informeAMostrar === Informe.Ingresos && chartData" [@slideIn]>
+            <canvas id="ingresosChart" baseChart [datasets]="chartData.data.datasets" [labels]="chartData.data.labels"
+            [options]="chartData.options">
+            </canvas>
+        </div>
+
+        <div *ngIf="informeAMostrar === Informe.TurnosPorEspecialidad && chartData" [@slideIn]>
+            <canvas id="especialidadChart" baseChart [data]="chartData.data" [options]="chartData.options" [type]="chartData.type">
+            </canvas>
+        </div>
+
+        <div *ngIf="informeAMostrar === Informe.TurnosPorDia && chartData" [@slideIn]>
+            <canvas id="diaChart" baseChart [datasets]="chartData.data.datasets" [labels]="chartData.data.labels"
+                [options]="chartData.options">
+            </canvas>
+        </div>
+
+        <div *ngIf="informeAMostrar === Informe.TurnosSolicitadosPorMedicoEnTiempo && !chartData">
+            <h4>Seleccionar un periodo de tiempo</h4>
+            <div class="datepicker-container">
+                <input type="date" [(ngModel)]="startDate" />
+                <input type="date" [(ngModel)]="endDate" />
+                <button [disabled]="!startDate || !endDate || endDate < startDate"
+                    (click)="obtenerTurnosSolicitadosPorMedico()">Mostrar</button>
+            </div>
+        </div>
+
+        <div *ngIf="informeAMostrar === Informe.TurnosSolicitadosPorMedicoEnTiempo && chartData" [@slideIn]>
+            <canvas id="turnosSolicitadosChart" baseChart [datasets]="chartData.data.datasets" [labels]="chartData.data.labels"
+                [options]="chartData.options">
+            </canvas>
+        </div>
+
+        <div *ngIf="informeAMostrar === Informe.TurnosFinalizadosPorMedicoEnTiempo && !chartData">
+            <h4>Seleccionar un periodo de tiempo</h4>
+            <div class="datepicker-container">
+                <input type="date" [(ngModel)]="startDate" />
+                <input type="date" [(ngModel)]="endDate" />
+                <button [disabled]="!startDate || !endDate || endDate < startDate"
+                    (click)="obtenerTurnosFinalizadosPorMedico()">Mostrar</button>
+            </div>
+        </div>
+
+        <div *ngIf="informeAMostrar === Informe.TurnosFinalizadosPorMedicoEnTiempo && chartData" [@slideIn]>
+            <canvas id="turnosFinalizadosChart" baseChart [datasets]="chartData.data.datasets" [labels]="chartData.data.labels"
+                [options]="chartData.options">
+            </canvas>
+        </div>
+    </div>
+
+    <div class="estadisticas">
+        <div *ngIf="informeAMostrar === Informe.Ingresos && chartData" [@slideIn]>
+            <h4>Estadísticas de Ingresos</h4>
+            <p>💎<strong>Día con más ingresos:</strong> {{ ingresosStats.maxIngresosDay[0] }} ({{ ingresosStats.maxIngresosDay[1] }} ingresos)</p>
+            <p>💎<strong>Día con menos ingresos:</strong> {{ ingresosStats.minIngresosDay[0] }} ({{ ingresosStats.minIngresosDay[1] }} ingresos)</p>
+            <p>💎<strong>Usuario con más ingresos:</strong> {{ ingresosStats.maxIngresosUser[0] }} ({{ ingresosStats.maxIngresosUser[1] }} ingresos)</p>
+            <p>💎<strong>Usuario con menos ingresos:</strong> {{ ingresosStats.minIngresosUser[0] }} ({{ ingresosStats.minIngresosUser[1] }} ingresos)</p>
+            <button (click)="generatePDF()">Generar PDF</button>
+        </div>
+
+        <div *ngIf="informeAMostrar === Informe.TurnosPorEspecialidad && chartData" [@slideIn]>
+            <h4>Estadísticas de Turnos por Especialidad</h4>
+            <p>💎<strong>Especialidad con más turnos:</strong> {{ turnosPorEspecialidadStats.maxTurnosEspecialidad[0] }} ({{ turnosPorEspecialidadStats.maxTurnosEspecialidad[1] }} turnos)</p>
+            <p>💎<strong>Especialidad con menos turnos:</strong> {{ turnosPorEspecialidadStats.minTurnosEspecialidad[0] }} ({{ turnosPorEspecialidadStats.minTurnosEspecialidad[1] }} turnos)</p>
+            <button (click)="generatePDF()">Generar PDF</button>
+        </div>
+
+        <div *ngIf="informeAMostrar === Informe.TurnosPorDia && chartData" [@slideIn]>
+            <h4>Estadísticas de Turnos por Día</h4>
+            <p>💎<strong>Día con más turnos:</strong> {{ turnosPorDiaStats.maxTurnosDia[0] }} ({{ turnosPorDiaStats.maxTurnosDia[1] }} turnos)</p>
+            <p>💎<strong>Día con menos turnos:</strong> {{ turnosPorDiaStats.minTurnosDia[0] }} ({{ turnosPorDiaStats.minTurnosDia[1] }} turnos)</p>
+            <p>💎<strong>Promedio de turnos por día:</strong> {{ turnosPorDiaStats.avgTurnosDia }}</p>
+            <button (click)="generatePDF()">Generar PDF</button>
+        </div>
+
+        <div *ngIf="informeAMostrar === Informe.TurnosSolicitadosPorMedicoEnTiempo && chartData" [@slideIn]>
+            <h4>Estadísticas de Turnos Solicitados por Médico</h4>
+            <p>💎<strong>Médico con más turnos solicitados:</strong> {{ turnosSolicitadosPorMedicoStats.maxTurnosMedico[0] }} ({{ turnosSolicitadosPorMedicoStats.maxTurnosMedico[1] }} turnos)</p>
+            <p>💎<strong>Médico con menos turnos solicitados:</strong> {{ turnosSolicitadosPorMedicoStats.minTurnosMedico[0] }} ({{ turnosSolicitadosPorMedicoStats.minTurnosMedico[1] }} turnos)</p>
+            <button (click)="generatePDF()">Generar PDF</button>
+        </div>
+
+        <div *ngIf="informeAMostrar === Informe.TurnosFinalizadosPorMedicoEnTiempo && chartData" [@slideIn]>
+            <h4>Estadísticas de Turnos Finalizados por Médico</h4>
+            <p>💎<strong>Médico con más turnos finalizados:</strong> {{ turnosFinalizadosPorMedicoStats.maxTurnosMedico[0] }} ({{ turnosFinalizadosPorMedicoStats.maxTurnosMedico[1] }} turnos)</p>
+            <p>💎<strong>Médico con menos turnos finalizados:</strong> {{ turnosFinalizadosPorMedicoStats.minTurnosMedico[0] }} ({{ turnosFinalizadosPorMedicoStats.minTurnosMedico[1] }} turnos)</p>
+            <button (click)="generatePDF()">Generar PDF</button>
+        </div>
+    </div>
+</section>
+
+<section *ngIf="informeAMostrar === null" class="mensaje">
+    <p>Seleccionar un informe</p>
+</section>

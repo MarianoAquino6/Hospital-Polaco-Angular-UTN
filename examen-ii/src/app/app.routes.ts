@@ -11,6 +11,7 @@ import { logueadoGuard } from './guards/logueado.guard';
 import { pacienteGuard } from './guards/paciente.guard';
 import { adminOPacienteGuard } from './guards/admin-opaciente.guard';
 import { medicoOPacienteGuard } from './guards/medico-opaciente.guard';
+import { InformesComponent } from './componentes/informes/informes.component';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/home', pathMatch: "full" },
@@ -19,6 +20,7 @@ export const routes: Routes = [
     { path: 'turnos', component: TurnosComponent, canActivate: [adminGuard]},
     { path: 'historia-clinica', component: HistoriaClinicaComponent, canActivate: [logueadoGuard] },
     { path: 'pacientes', component: PacientesComponent, canActivate: [medicoGuard] },
+    { path: 'informes', component: InformesComponent, canActivate: [adminGuard] },
     {
         path: 'usuarios',
         loadChildren: () => import('./modulos/usuarios/usuarios.module').then(c => c.UsuariosModule),

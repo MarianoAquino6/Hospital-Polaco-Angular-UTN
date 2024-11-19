@@ -1,6 +1,6 @@
 import * as XLSX from 'xlsx';
-import { Component } from '@angular/core';
-import { collection, Firestore, getDocs } from '@angular/fire/firestore'; // Importación de Firestore
+import { Component, EventEmitter, Output } from '@angular/core';
+import { collection, Firestore, getDocs } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-usuarios',

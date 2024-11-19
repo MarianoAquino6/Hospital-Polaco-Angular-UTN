@@ -9,10 +9,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TablaUsuariosComponent } from './tabla-usuarios/tabla-usuarios.component';
 import { LoadingComponent } from '../../componentes/loading/loading.component';
 import { RecaptchaModule } from 'ng-recaptcha-2';
+import { CardsComponent } from './cards/cards.component';
 
 
 @NgModule({
-  declarations: [UsuariosComponent, GestionAccesoComponent, RegistroAdminComponent, TablaUsuariosComponent],
+  declarations: [UsuariosComponent, GestionAccesoComponent, RegistroAdminComponent, TablaUsuariosComponent, CardsComponent],
   imports: [
     CommonModule,
     UsuariosRoutingModule,

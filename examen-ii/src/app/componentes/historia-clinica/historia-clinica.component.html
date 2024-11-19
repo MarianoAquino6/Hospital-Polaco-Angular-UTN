@@ -8,6 +8,12 @@
 
 <section>
     <div *ngIf="editable">
+        <div class="button-group">
+            <button class="btn btn-danger mt-4" onclick="window.history.back();">
+                ATRÁS
+            </button>
+        </div>
+
         <form (ngSubmit)="guardarHistoriaClinica()" class="historia-clinica">
             <div class="izq">
                 <label>Altura</label>
@@ -41,16 +47,16 @@
                 <div class="izq">
                     <ul>
                         <li>
-                            <span class="label">Altura:</span> {{ historia.historiaClinica.altura }}
+                            <span class="label">Altura:</span> {{ historia.historiaClinica.altura | unidadesHc: 'altura'}}
                         </li>
                         <li>
-                            <span class="label">Peso:</span> {{ historia.historiaClinica.peso }}
+                            <span class="label">Peso:</span> {{ historia.historiaClinica.peso | unidadesHc: 'peso'}}
                         </li>
                         <li>
-                            <span class="label">Temperatura:</span> {{ historia.historiaClinica.temperatura }}
+                            <span class="label">Temperatura:</span> {{ historia.historiaClinica.temperatura | unidadesHc: 'temperatura'}}
                         </li>
                         <li>
-                            <span class="label">Presión:</span> {{ historia.historiaClinica.presion }}
+                            <span class="label">Presión:</span> {{ historia.historiaClinica.presion | unidadesHc: 'presion'}}
                         </li>
                     </ul>
                 </div>
