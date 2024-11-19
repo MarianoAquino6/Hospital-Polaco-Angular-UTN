@@ -83,6 +83,8 @@ Accesible solo para los administradores, esta sección ofrece estadísticas y gr
   - Turnos solicitados y finalizados por cada médico en un intervalo de tiempo.
 - **Descargas**: Posibilidad de descargar los gráficos e informes en PDF o Excel.
 
+![Informes](./img/informes.png)
+
 ## Formas de Acceso a las Secciones
 - **Acceso al Sistema**: Desde la página de inicio, los usuarios pueden ingresar al sistema mediante la sección de login.
 - **Registro**: Disponible en la página de inicio para pacientes y especialistas.
