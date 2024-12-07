@@ -1,106 +1,110 @@
 # Hospital Polaco de Buenos Aires
 
 ## Descripción General
-Este proyecto representa el portal web del **Hospital Polaco de Buenos Aires**, en donde se pueden gestionar turnos médicos, consultas, y la administración de pacientes y especialistas. Este permite un manejo eficiente de las citas médicas, facilitando la interacción entre pacientes, especialistas y administradores en un entorno seguro y fácil de usar.
+This project represents the web portal for the **Polish Hospital of Buenos Aires**, where medical appointments, consultations, and patient and specialist management can be efficiently handled. It facilitates interaction between patients, specialists, and administrators in a secure and user-friendly environment.
 
-El hospital cuenta con 6 consultorios, dos laboratorios físicos y una sala de espera general. El horario de atención es de lunes a viernes de 8:00 a 19:00 y los sábados de 8:00 a 14:00.
+The hospital has six consultation rooms, two physical laboratories, and a general waiting room. Operating hours are Monday to Friday from 8:00 AM to 7:00 PM, and Saturdays from 8:00 AM to 2:00 PM.
 
 ## Deploy
 
-Podrás acceder al portal web mediante el siguiente link de acceso:
+You can access the web portal via the following link:
 
-https://segundo-examen-labo-iv.web.app/home
+[Polish Hospital Portal - Live Demo](https://segundo-examen-labo-iv.web.app/home)
 
-## Pantallas y Secciones del Sistema
+## System Screens and Sections
 
-### Página de Bienvenida
-La página de inicio del sitio web brinda una introducción al **Hospital Polaco de Buenos Aires** y ofrece acceso directo a las secciones de **login** y **registro**.
-- **Accesos**: Login y Registro.
-- **Contenido**: Mensaje de bienvenida y breve descripción de la clínica.
+### Welcome Page
+The homepage provides an introduction to the **Polish Hospital of Buenos Aires** and offers direct access to the **login** and **registration** sections.
+- **Access Points**: Login and Registration.
+- **Content**: Welcome message and a brief description of the clinic.
 
 ![Home](./img/home.png)
 
-### Registro de Usuarios
-Esta sección permite a los usuarios registrarse como pacientes o especialistas.
-- **Datos de Pacientes**: Nombre, apellido, edad, DNI, obra social, email, contraseña y 2 imágenes de perfil.
-- **Datos de Especialistas**: Nombre, apellido, edad, DNI, especialidad (con opción de agregar nuevas), email, contraseña e imagen de perfil.
-- **Validaciones**: Todos los campos incluyen validaciones adecuadas para garantizar la correcta entrada de datos.
-- **Captcha**: Para proteger el registro, se ha integrado un reCAPTCHA de Google.
+### User Registration
+This section allows users to register as patients or specialists.
+- **Patient Data**: First name, last name, age, ID, insurance, email, password, and 2 profile images.
+- **Specialist Data**: First name, last name, age, ID, specialty (with the ability to add new ones), email, password, and a profile image.
+- **Validations**: All fields include proper validation to ensure data integrity.
+- **Captcha**: A Google reCAPTCHA is integrated to secure the registration process.
 
-![Registro](./img/registro.png)
+![Registration](./img/registro.png)
 
 ### Login
-El módulo de login permite a los usuarios autenticarse para acceder a la plataforma.
-- **Accesos Rápidos**: Con el objetivo de utilizar facilmente la plataforma, se han creado usuarios predeterminados.
-- **Validaciones**: Solo aquellos usuarios que hayan verificado su cuenta podrán ingresar al portal.
-- **Restricciones**: Los especialistas solo pueden acceder una vez que un administrador apruebe su cuenta.
+The login module allows users to authenticate and access the platform.
+- **Quick Access**: Predefined users are available for easy testing.
+- **Validations**: Only verified accounts can log in.
+- **Restrictions**: Specialists can access the portal only after their account has been approved by an administrator.
 
 ![Login](./img/login.png)
 
-### Panel de Administración (Sección de Usuarios)
-Accesible solo para los administradores, esta sección permite la gestión de usuarios.
-- **Acciones**: Aceptar especialistas, inhabilitar y habilitar los usuarios del sistema y crear nuevos usuarios (pacientes, especialistas y administradores).
-- **Visualización**: Información detallada de los usuarios, incluyendo sus perfiles.
-- **Descarga de Excel**: Descarga de datos de usuarios en formato Excel para facilitar la gestión administrativa.
+### Administration Panel (User Section)
+Accessible only to administrators, this section allows for user management.
+- **Actions**: Approve specialists, enable/disable user accounts, and create new users (patients, specialists, and administrators).
+- **View Details**: Detailed user information, including profile images.
+- **Excel Export**: Download user data in Excel format for administrative purposes.
 
-![Usuarios](./img/usuarios.png)
+![Users](./img/usuarios.png)
 
-### Solicitar Turno
-Esta sección permite a los pacientes y administradores solicitar turnos de manera fácil y rápida.
-- **Opciones de Selección**: Especialidad, especialista, día y hora.
-- **Restricciones**: Los pacientes pueden elegir turnos en un rango de hasta 15 días y según la disponibilidad del especialista.
+### Book Appointments
+This section allows patients and administrators to book appointments quickly and easily.
+- **Selection Options**: Specialty, specialist, date, and time.
+- **Restrictions**: Patients can book appointments up to 15 days in advance based on specialist availability.
 
-![Solicitar Turno 1](./img/solicitar-turno.png)
-![Solicitar Turno 2](./img/solicitar-turno2.png)
+![Book Appointment 1](./img/solicitar-turno.png)
+![Book Appointment 2](./img/solicitar-turno2.png)
 
-### Mis Turnos (Pacientes y Especialistas)
-Sección donde los usuarios pueden ver y gestionar sus turnos.
-- **Pacientes**:
-  - Visualización de turnos solicitados, con la opción de cancelarlos si no se han realizado.
-  - Filtros por especialidad y especialista (sin uso de combobox).
-  - Posibilidad de calificar la atención y dejar comentarios una vez que el turno ha sido finalizado.
-- **Especialistas**:
-  - Visualización de los turnos asignados, con opciones de aceptar, rechazar, cancelar o finalizar turnos.
-  - Posibilidad de dejar una reseña o diagnóstico al finalizar un turno.
+### My Appointments (Patients and Specialists)
+This section enables users to view and manage their appointments.
+- **Patients**:
+  - View requested appointments and cancel those that have not yet occurred.
+  - Filter by specialty and specialist (without using dropdown menus).
+  - Rate the service and leave comments once the appointment is completed.
+- **Specialists**:
+  - View assigned appointments with options to accept, reject, cancel, or mark them as completed.
+  - Add a review or diagnosis after completing an appointment.
 
-![Mis Turnos 1](./img/mis-turnos.png)
-![Mis Turnos 2](./img/mis-turnos2.png)
+![My Appointments 1](./img/mis-turnos.png)
+![My Appointments 2](./img/mis-turnos2.png)
 
-### Mi Perfil
-En esta sección, los usuarios pueden ver y actualizar su información personal, incluidas las imágenes de perfil y otros datos relevantes.
-- **Pacientes**: Visualización de la historia clínica y datos de contacto.
-- **Especialistas**: Capacidad de ajustar su disponibilidad horaria, tomando en cuenta que pueden tener múltiples especialidades asociadas.
+### My Profile
+In this section, users can view and update their personal information, including profile images and other relevant details.
+- **Patients**: Access their medical history and contact details.
+- **Specialists**: Adjust availability schedules, considering they may have multiple associated specialties.
 
-![Mi Perfil](./img/perfil.png)
+![My Profile](./img/perfil.png)
 
-### Historia Clínica
-Los especialistas pueden cargar y ver la historia clínica de los pacientes que han atendido al menos una vez.
-- **Datos Fijos**: Altura, peso, temperatura y presión.
-- **Datos Dinámicos**: Hasta tres datos adicionales con clave y valor, como "caries: 4".
-- **Acceso**: Disponible desde la sección "Mi Perfil" para pacientes, y desde la sección de "Usuarios" para administradores.
+### Medical History
+Specialists can add and view the medical history of patients they have attended at least once.
+- **Fixed Data**: Height, weight, temperature, and blood pressure.
+- **Dynamic Data**: Up to three additional fields with key-value pairs, such as "cavities: 4".
+- **Access**: Available from the "My Profile" section for patients and from the "Users" section for administrators.
 
-![Historia Clinica](./img/historia-clinica.png)
+![Medical History](./img/historia-clinica.png)
 
-### Informes y Estadísticas
-Accesible solo para los administradores, esta sección ofrece estadísticas y gráficos sobre el uso del sistema.
-- **Informes Disponibles**:
-  - Log de ingresos al sistema, indicando usuario, día y hora.
-  - Cantidad de turnos por especialidad y día.
-  - Turnos solicitados y finalizados por cada médico en un intervalo de tiempo.
-- **Descargas**: Posibilidad de descargar los gráficos e informes en PDF o Excel.
+### Reports and Statistics
+Accessible only to administrators, this section provides statistics and charts about system usage.
+- **Available Reports**:
+  - System login logs, including user, date, and time.
+  - Number of appointments per specialty and day.
+  - Appointments requested and completed by each doctor within a time interval.
+- **Downloads**: Charts and reports can be downloaded in PDF or Excel format.
 
-![Informes](./img/informes.png)
+![Reports](./img/informes.png)
 
-## Formas de Acceso a las Secciones
-- **Acceso al Sistema**: Desde la página de inicio, los usuarios pueden ingresar al sistema mediante la sección de login.
-- **Registro**: Disponible en la página de inicio para pacientes y especialistas.
-- **Panel de Administración**: Solo accesible para administradores tras el login.
-- **Mis Turnos**: Accesible desde el menú de usuario para pacientes y especialistas.
-- **Mi Perfil**: Acceso desde la barra de navegación superior al iniciar sesión.
+## Navigation and Section Access
+- **System Access**: Users can log in via the homepage.
+- **Registration**: Available on the homepage for patients and specialists.
+- **Admin Panel**: Only accessible to administrators after logging in.
+- **My Appointments**: Accessible from the user menu for patients and specialists.
+- **My Profile**: Accessible from the top navigation bar after logging in.
 
-## Tecnologías Utilizadas
+## Technologies Used
 - **Framework**: Angular
 - **Backend**: Firebase
-- **Base de Datos**: Firestore
-- **Estilos**: CSS y Bootstrap para un diseño responsivo
-- **Seguridad**: reCAPTCHA de Google para proteger el registro de usuarios
+- **Database**: Firestore
+- **Styling**: CSS and Bootstrap for responsive design
+- **Security**: Google reCAPTCHA for user registration protection
+
+<div style="text-align:center">
+  <img src="./UTN_logo.png" alt="UTN Logo" width="450"/>
+</div>
